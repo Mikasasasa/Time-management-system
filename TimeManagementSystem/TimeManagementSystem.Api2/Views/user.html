@@ -1,0 +1,15 @@
+﻿<div id="container">
+	<!-- ko with: user-->
+	<!-- ko if: $parent.isFullForm -->
+	<label for="login">Login:</label>
+	<input type="text" data-bind="value: Login" id="login" />
+	<label for="password">Password:</label>
+	<input type="text" data-bind="value: Password" id="password" />
+	<label for="permissionLevel">PermissionLevel:</label>
+	<select data-bind="value: PermissionLevel, options: $parent.permissionLevels, optionsText: 'name', optionsValue: 'value'" id="permissionLevel" />
+	<!-- /ko-->
+	<label for="preferredWorkingHourPerDay">PreferredWorkingHourPerDay:</label>
+	<input type="text" data-bind="value: PreferredWorkingHourPerDay" id="preferredWorkingHourPerDay" />
+	<!-- /ko -->
+	<input type="submit" data-bind="click: saveUser" value="save" />
+</div>

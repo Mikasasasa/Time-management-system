@@ -1,0 +1,20 @@
+﻿<div id="container">
+	<button data-bind="click: addUser">Add user</button>
+	<h2>Users:</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Login</th>
+				<th>PermissionLevel</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody data-bind="foreach: users">
+			<tr>
+				<td data-bind="text: Login"></td>
+				<td data-bind="text: PermissionLevel"></td>
+				<td><button data-bind="click: $parent.editUser">Edit</button><button data-bind="click:$parent.removeUser">Delete</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

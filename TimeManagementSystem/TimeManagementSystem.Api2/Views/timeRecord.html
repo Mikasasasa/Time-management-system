@@ -1,0 +1,11 @@
+﻿<div id="container">
+	<!-- ko with: record-->
+	<label for="note">Note:</label>
+	<input type="text" data-bind="value: Note" id="note" />
+	<label for="date">Date:</label>
+	<input type="date" data-bind="value: $parent.date" id="date" />
+	<label for="length">Length(h):</label>
+	<input type="number" data-bind="value: Length" id="length" />
+	<!-- /ko -->
+	<input type="submit" data-bind="click: saveRecord" value="save" />
+</div>

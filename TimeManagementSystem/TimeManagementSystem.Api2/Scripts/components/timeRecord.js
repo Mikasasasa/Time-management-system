@@ -1,54 +1,43 @@
 ﻿(function () {
     var app = Sammy.apps.body;
 
-    function UserViewModel(action, id) {
+    function TimeRecordViewModel(action, id) {
         var self = this;
-        self.user = ko.observable();
-        self.isFullForm = ko.observable(action !== "options");
-        self.permissionLevels = ko.observableArray([{ name: "regular", value: 0 }, { name: "user manager", value: 1 }, { name: "administrator", value: 2 }]);
+        self.record = ko.observable();
+        self.date = ko.observable(null);
 
         if (action === "add") {
-            self.user({
-                Login: null,
-                Password: null,
-                PermissionLevel: 0,
-                PreferredWorkingHourPerDay: null
+            self.record({
+                StartDate: null,
+                Note: null,
+                Length: 0
             });
         } else {
-            $.get("http://localhost:4599/api/Users", { id: id })
-                .done(function (data) {
-                    self.user(data);
-                }).fail(function (data) {
-                    alert("not such user");
-                    location.hash = "timeRecords";
-                });
+            authenticatedRequest("TimeRecords", "get", { id: id }, function (data) {
+                self.record(data);
+                self.date(moment(data.StartDate).format('YYYY-MM-DD'));
+            },
+            function () {
+                alert("not such record");
+                location.hash = "timeRecords";
+            });
         }
-        self.goToTimeRecords = function () {
-            location.hash = "timeRecords/" + id;
-        };
-        self.saveUser = function () {
+
+        self.saveRecord = function () {
             if (action === "add") {
-                $.ajax({
-                    url: "http://localhost:4599/api/Users",
-                    type: "post",
-                    contentType: 'application/json',
-                    data: ko.toJSON(self.user)
-                })
-                .done(function (data) {
+                authenticatedRequest("TimeRecords", "post", ko.toJSON(self.record), function (data) {
                     alert("ok");
-                }).fail(function (data) {
+                    location.hash = "timeRecords/edit/" + data.Id;
+                },
+                function () {
                     alert("not ok");
                 });
             } else {
-                $.ajax({
-                    url: "http://localhost:4599/api/Users/" + id,
-                    type: "put",
-                    contentType: 'application/json',
-                    data: ko.toJSON(self.user)
-                })
-                .done(function (data) {
+                self.record().StartDate = self.date();
+                authenticatedRequest("TimeRecords/" + self.record().Id, "put", ko.toJSON(self.record), function (data) {
                     alert("ok");
-                }).fail(function (data) {
+                },
+                function () {
                     alert("not ok");
                 });
             }
@@ -59,14 +48,15 @@
         var self = this;
         self.records = ko.observableArray();
 
-        $.get("http://localhost:4599/api/TimeRecords", {})
-            .done(function (data) {
-                for (var i = 0, len = data.length; i < len; ++i) {
-                    self.records.push(data[i]);
-                }
-            }).fail(function (data) {
-                alert("Error");
-            });
+        authenticatedRequest("TimeRecords", "get", {}, function (data) {
+            for (var i = 0, len = data.length; i < len; ++i) {
+                self.records.push(data[i]);
+            }
+        },
+        function () {
+            alert("Error");
+        });
+
         self.addRecord = function () {
             location.hash = "timeRecords/add";
         };
@@ -76,17 +66,72 @@
         self.removeRecord = function () {
             if (confirm("Are you sure?")) {
                 var removedItem = this;
-                $.ajax({
-                    url: "http://localhost:4599/api/TimeRecords/" + removedItem.Id,
-                    type: "delete"
-                }).done(function () {
+                authenticatedRequest("TimeRecords/" + removedItem.Id, "delete", {}, function (data) {
                     self.records.remove(removedItem);
                     alert("ok");
-                }).fail(function () {
+                },
+                function () {
                     alert("removing failed");
                 });
             }
         };
+    }
+
+    function TimeRecordsCalendarViewModel() {
+        var self = this;
+        self.records = ko.observableArray();
+        self.PrefferedWorkingHours = ko.observable(0);
+
+        self.filterFrom = ko.observable("");
+        self.filterTo = ko.observable("");
+
+        self.filteredRecords = ko.computed(function () {
+            function isInFilter(element, index, array) {
+                return (element.date >= self.filterFrom() || self.filterFrom() === "") && (element.date <= self.filterTo() || self.filterTo() === "");
+            }
+            return self.records().filter(isInFilter);
+        });
+
+        authenticatedRequest("Users", "get", {}, function (data) {
+            self.PrefferedWorkingHours(data[0].PreferredWorkingHourPerDay);
+            authenticatedRequest("TimeRecords", "get", {}, function (data) {
+                var itemDate = null;
+                var itemHours = 0;
+                var itemNotes = [];
+                for (var i = 0, len = data.length; i < len; ++i) {
+                    var item = data[i];
+                    if (itemDate === item.StartDate) {
+                        itemHours += item.Length;
+                        itemNotes.push(item.Note);
+                    } else {
+                        if (i > 0) {
+                            self.records.push({
+                                date: itemDate,
+                                length: itemHours,
+                                notes: itemNotes,
+                                isValid: itemHours >= self.PrefferedWorkingHours()
+                            });
+                        }
+                        itemDate = item.StartDate;
+                        itemHours = item.Length;
+                        itemNotes = [item.Note];
+                    }
+                }
+                self.records.push({
+                    date: itemDate,
+                    length: itemHours,
+                    notes: itemNotes,
+                    isValid: itemHours >= self.PrefferedWorkingHours()
+                });
+            },
+            function () {
+                alert("Error");
+            });
+        },
+        function () {
+            alert("not such user");
+            location.hash = "timeRecords";
+        });
     }
 
     app.get('/#timeRecords', function (context) {
@@ -96,26 +141,25 @@
         });
     });
 
-    app.get('/#users/options/:id', function (context) {
-        var params = this.params;
-        context.render('/Views/user.html', {}, function (output) {
+    app.get('/#timeRecords/calendar', function (context) {
+        context.render('/Views/timeRecordsCalendar.html', {}, function (output) {
             $('#wrapper').html(output);
-            ko.applyBindings(new UserViewModel("options", params.id), document.getElementById("container"));
+            ko.applyBindings(new TimeRecordsCalendarViewModel(), document.getElementById("container"));
         });
     });
 
-    app.get('/#users/add', function (context) {
-        context.render('/Views/user.html', {}, function (output) {
+    app.get('/#timeRecords/edit/:id', function (context) {
+        var params = this.params;
+        context.render('/Views/timeRecord.html', {}, function (output) {
             $('#wrapper').html(output);
-            ko.applyBindings(new UserViewModel("add"), document.getElementById("container"));
+            ko.applyBindings(new TimeRecordViewModel("options", params.id), document.getElementById("container"));
         });
     });
 
-    app.get('/#users/edit/:id', function (context) {
-        var params = this.params;
-        context.render('/Views/user.html', {}, function (output) {
+    app.get('/#timeRecords/add', function (context) {
+        context.render('/Views/timeRecord.html', {}, function (output) {
             $('#wrapper').html(output);
-            ko.applyBindings(new UserViewModel("edit", params.id), document.getElementById("container"));
+            ko.applyBindings(new TimeRecordViewModel("add"), document.getElementById("container"));
         });
     });
 

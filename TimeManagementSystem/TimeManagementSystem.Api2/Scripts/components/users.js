@@ -1,7 +1,7 @@
 ﻿(function () {
     var app = Sammy.apps.body;
 
-    function UserViewModel(action, id) {
+    function UserViewModel(action, userName) {
         var self = this;
         self.user = ko.observable();
         self.isFullForm = ko.observable(action !== "options");
@@ -15,40 +15,41 @@
                 PreferredWorkingHourPerDay: null
             });
         } else {
-            $.get("http://localhost:4599/api/Users", { id: id })
-                .done(function (data) {
+            if (action === "edit") {
+                authenticatedRequest("Users", "get", { username: userName }, function (data) {
                     self.user(data);
-                }).fail(function (data) {
+                },
+                function () {
                     alert("not such user");
                     location.hash = "timeRecords";
                 });
+            } else {
+                authenticatedRequest("Users", "get", {}, function (data) {
+                    self.user(data[0]);
+                },
+                function () {
+                    alert("not such user");
+                    location.hash = "timeRecords";
+                });
+            }
         }
         self.goToTimeRecords = function () {
             location.hash = "timeRecords/" + id;
         };
         self.saveUser = function () {
             if (action === "add") {
-                $.ajax({
-                    url: "http://localhost:4599/api/Users",
-                    type: "post",
-                    contentType: 'application/json',
-                    data: ko.toJSON(self.user)
-                })
-                .done(function (data) {
+                authenticatedRequest("Users", "post", ko.toJSON(self.user), function (data) {
                     alert("ok");
-                }).fail(function (data) {
+                    location.hash = "users/edit/" + data.Login;
+                },
+                function () {
                     alert("not ok");
                 });
             } else {
-                $.ajax({
-                    url: "http://localhost:4599/api/Users/" + id,
-                    type: "put",
-                    contentType: 'application/json',
-                    data: ko.toJSON(self.user)
-                })
-                .done(function (data) {
+                authenticatedRequest("Users/" + self.user().Id, "put", ko.toJSON(self.user), function (data) {
                     alert("ok");
-                }).fail(function (data) {
+                },
+                function () {
                     alert("not ok");
                 });
             }
@@ -59,30 +60,28 @@
         var self = this;
         self.users = ko.observableArray();
 
-        $.get("http://localhost:4599/api/Users", {})
-            .done(function (data) {
-                for (var i = 0, len = data.length; i < len; ++i) {
-                    self.users.push(data[i]);
-                }
-            }).fail(function (data) {
-                alert("Error");
-            });
+        authenticatedRequest("Users", "get", ko.toJSON(self.user), function (data) {
+            for (var i = 0, len = data.length; i < len; ++i) {
+                self.users.push(data[i]);
+            }
+        },
+        function () {
+            alert("Error");
+        });
         self.addUser = function () {
             location.hash = "users/add";
         };
         self.editUser = function () {
-            location.hash = "users/edit/" + this.Id;
+            location.hash = "users/edit/" + this.Login;
         };
         self.removeUser = function () {
             if (confirm("Are you sure?")) {
                 var removedItem = this;
-                $.ajax({
-                    url: "http://localhost:4599/api/Users/" + removedItem.Id,
-                    type: "delete"
-                }).done(function () {
+                authenticatedRequest("Users/" + removedItem.Id, "delete", {}, function (data) {
                     self.users.remove(removedItem);
                     alert("ok");
-                }).fail(function () {
+                },
+                function () {
                     alert("removing failed");
                 });
             }
@@ -96,11 +95,11 @@
         });
     });
 
-    app.get('/#users/options/:id', function (context) {
+    app.get('/#users/edit', function (context) {
         var params = this.params;
         context.render('/Views/user.html', {}, function (output) {
             $('#wrapper').html(output);
-            ko.applyBindings(new UserViewModel("options", params.id), document.getElementById("container"));
+            ko.applyBindings(new UserViewModel("options"), document.getElementById("container"));
         });
     });
 
@@ -111,11 +110,11 @@
         });
     });
 
-    app.get('/#users/edit/:id', function (context) {
+    app.get('/#users/edit/:username', function (context) {
         var params = this.params;
         context.render('/Views/user.html', {}, function (output) {
             $('#wrapper').html(output);
-            ko.applyBindings(new UserViewModel("edit", params.id), document.getElementById("container"));
+            ko.applyBindings(new UserViewModel("edit", params.username), document.getElementById("container"));
         });
     });
 

@@ -1,0 +1,8 @@
+﻿<div id="menu">
+	<!-- ko if: isMenuVisible-->
+	<a data-bind="visible: canSeeTimeRecords" href="/#timeRecords">Time Records</a>
+	<a data-bind="visible: canSeeUsers" href="/#users">Users</a>
+	<a data-bind="visible: canSeeMyProfile" href="/#users/edit">My Profile</a>
+	<a data-bind="click: logout">Logout</a>
+	<!-- /ko-->
+</div>

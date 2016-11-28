@@ -9,6 +9,7 @@ namespace TimeManagementSystem.API.Models
     {
 		Regular,
 		UserManager,
-		Admin
+		Administrator,
+		Undefined
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,6 +8,8 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using TimeManagementSystem.API;
@@ -17,107 +21,127 @@ namespace TimeManagementSystem.API.Controllers
     {
         private TimeManagementSystemContext db = new TimeManagementSystemContext();
 
-        // GET: api/Users
-        public IList<User> GetUsers()
+		private AuthRepository _repo;
+
+		public UsersController() {
+			_repo = new AuthRepository();
+		}
+
+		// GET: api/Users
+		[Authorize]
+		public async Task<IList<User>> GetUsers()
         {
-            return db.Users.ToList();
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
+
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var username = claims.FirstOrDefault(claim => claim.Type == "username").Value;
+
+			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+				var user = await _repo.FindUser(username);
+				return new List<User> { new User {
+					Id = user.Id,
+					Login = user.UserName,
+					PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
+				}};
+			} else {
+				var users = _repo.GetAll();
+				return users.Select(user => new User {
+					Id = user.Id,
+					Login = user.UserName,
+					PermissionLevel = _repo.getPermissionLevel(user.Roles.FirstOrDefault().RoleId),
+					PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
+				}).ToList();
+			}
         }
 
         // GET: api/Users/5
         [ResponseType(typeof(User))]
-        public IHttpActionResult GetUser(int id)
-        {
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+		[Authorize]
+		public async Task<IHttpActionResult> GetUser(string username) {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
 
-            return Ok(user);
-		}
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+				return Unauthorized();
+			}
 
-		[ResponseType(typeof(User))]
-		public IHttpActionResult GetUser(string login, string password) {
-			User user = db.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+			var user = await _repo.FindUser(username);
 			if (user == null) {
 				return NotFound();
 			}
-
-			return Ok(user);
+			var result = new User {
+				Login = user.UserName,
+				PermissionLevel = _repo.getPermissionLevel(user.Roles.FirstOrDefault().RoleId),
+				PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
+			};
+			return Ok(result);
 		}
 
 		// PUT: api/Users/5
 		[ResponseType(typeof(void))]
-        public IHttpActionResult PutUser(int id, User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != user.Id)
-            {
-                return BadRequest();
-			}
-
-			if (UserExists(user.Id, user.Login)) {
+		[Authorize]
+		public IHttpActionResult PutUser(string id, User user) {
+			if (!ModelState.IsValid) {
 				return BadRequest(ModelState);
 			}
 
-			db.Entry(user).State = EntityState.Modified;
+			if (id != user.Id) {
+				return BadRequest();
+			}
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+
+			if (_repo.getPermissionLevel(role) != PermissionLevel.Regular) {
+				_repo.UpdateUser(user);
+			} else {
+				if (id == userId) {
+					user.PermissionLevel = PermissionLevel.Undefined;
+					_repo.UpdateUser(user);
+				} else {
+					return Unauthorized();
+				}
+			}
+			return Ok();
+		}
 
         // POST: api/Users
         [ResponseType(typeof(User))]
-        public IHttpActionResult PostUser(User user)
+        public async Task<IHttpActionResult> PostUser(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-			if (UserExists(user.Login)) {
-				return BadRequest(ModelState);
+			var result = await _repo.RegisterUser(user);
+
+			return Ok(new User { Login = user.Login });
+		}
+
+		// DELETE: api/Users/5
+		[ResponseType(typeof(User))]
+		[Authorize]
+		public IHttpActionResult DeleteUser(string id)
+        {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
+
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+
+			if (_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+				_repo.DeleteUser(id);
+			}
+			else {
+				return Unauthorized();
 			}
 
-            db.Users.Add(user);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
-        }
-
-        // DELETE: api/Users/5
-        [ResponseType(typeof(User))]
-        public IHttpActionResult DeleteUser(int id)
-        {
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            db.Users.Remove(user);
-            db.SaveChanges();
-
-            return Ok(user);
+			return Ok();
         }
 
         protected override void Dispose(bool disposing)
@@ -128,18 +152,5 @@ namespace TimeManagementSystem.API.Controllers
             }
             base.Dispose(disposing);
         }
-
-        private bool UserExists(int id)
-        {
-            return db.Users.Count(e => e.Id == id) > 0;
-		}
-
-		private bool UserExists(string login) {
-			return db.Users.Count(e => e.Login == login) > 0;
-		}
-
-		private bool UserExists(int id, string login) {
-			return db.Users.Count(e => e.Login == login && e.Id != id) > 0;
-		}
 	}
 }

@@ -9,12 +9,12 @@ namespace TimeManagementSystem.API.Models
 {
     public class User
     {
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Login { get; set; }
 		public string Password { get; set; }
 		public PermissionLevel PermissionLevel { get; set; }
 		public int? PreferredWorkingHourPerDay { get; set; }
 
-		public virtual ICollection<TimeRecord> TimeRecords { get; set; }
+		//public virtual ICollection<TimeRecord> TimeRecords { get; set; }
 	}
 }

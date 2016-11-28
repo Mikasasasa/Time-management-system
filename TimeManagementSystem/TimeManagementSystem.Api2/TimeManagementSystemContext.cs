@@ -9,7 +9,7 @@ namespace TimeManagementSystem.API
 {
     public class TimeManagementSystemContext : DbContext
     {
-		public DbSet<User> Users { get; set; }
+		//public DbSet<User> Users { get; set; }
 		public DbSet<TimeRecord> TimeRecors { get; set; }
 	}
 }

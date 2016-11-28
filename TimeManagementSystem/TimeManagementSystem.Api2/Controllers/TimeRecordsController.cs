@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 using System.Web.Http.Description;
 using TimeManagementSystem.API;
@@ -15,32 +16,76 @@ namespace TimeManagementSystem.API.Controllers
 {
     public class TimeRecordsController : ApiController
     {
-        private TimeManagementSystemContext db = new TimeManagementSystemContext();
+        private AuthContext db = new AuthContext();
 
         // GET: api/TimeRecords
-        public IQueryable<TimeRecord> GetTimeRecors()
-        {
-            return db.TimeRecors;
+		[Authorize]
+		[ResponseType(typeof(IList<TimeRecord>))]
+		public IHttpActionResult GetTimeRecors() {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
+
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+			if (getPermissionLevel(role) == PermissionLevel.Regular) {
+				return Ok(db.TimeRecors.Where(tr => tr.UserId == userId).OrderBy(tr => tr.StartDate));
+			} else if (getPermissionLevel(role) == PermissionLevel.Administrator) {
+				return Ok(db.TimeRecors.OrderBy(tr => tr.StartDate));
+			} else {
+				return Unauthorized();
+			}
         }
 
         // GET: api/TimeRecords/5
         [ResponseType(typeof(TimeRecord))]
-        public IHttpActionResult GetTimeRecord(int id)
-        {
-            TimeRecord timeRecord = db.TimeRecors.Find(id);
-            if (timeRecord == null)
-            {
-                return NotFound();
-            }
+		[Authorize]
+        public IHttpActionResult GetTimeRecord(int id) {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
 
-            return Ok(timeRecord);
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+
+			var permissionLevel = getPermissionLevel(role);
+
+			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
+				return Unauthorized();
+			}
+
+			TimeRecord timeRecord = db.TimeRecors.Find(id);
+
+			if (timeRecord == null) {
+				return NotFound();
+			}
+
+			if (permissionLevel == PermissionLevel.Regular && userId != timeRecord.UserId) {
+				return Unauthorized();
+			} else {
+				return Ok(timeRecord);
+			}
         }
 
         // PUT: api/TimeRecords/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTimeRecord(int id, TimeRecord timeRecord)
-        {
-            if (!ModelState.IsValid)
+		[Authorize]
+        public IHttpActionResult PutTimeRecord(int id, TimeRecord timeRecord) {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
+
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+
+			var permissionLevel = getPermissionLevel(role);
+
+			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
+				return Unauthorized();
+			}
+
+			if (permissionLevel == PermissionLevel.Regular && userId != timeRecord.UserId) {
+				return Unauthorized();
+			}
+
+			if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -73,14 +118,21 @@ namespace TimeManagementSystem.API.Controllers
 
         // POST: api/TimeRecords
         [ResponseType(typeof(TimeRecord))]
+		[Authorize]
         public IHttpActionResult PostTimeRecord(TimeRecord timeRecord)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+			}
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
+			
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-            db.TimeRecors.Add(timeRecord);
+			timeRecord.UserId = userId;
+
+			db.TimeRecors.Add(timeRecord);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = timeRecord.Id }, timeRecord);
@@ -88,18 +140,35 @@ namespace TimeManagementSystem.API.Controllers
 
         // DELETE: api/TimeRecords/5
         [ResponseType(typeof(TimeRecord))]
-        public IHttpActionResult DeleteTimeRecord(int id)
-        {
-            TimeRecord timeRecord = db.TimeRecors.Find(id);
-            if (timeRecord == null)
-            {
-                return NotFound();
-            }
+		[Authorize]
+        public IHttpActionResult DeleteTimeRecord(int id) {
+			var identity = (ClaimsIdentity)User.Identity;
+			IEnumerable<Claim> claims = identity.Claims;
 
-            db.TimeRecors.Remove(timeRecord);
-            db.SaveChanges();
+			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-            return Ok(timeRecord);
+			var permissionLevel = getPermissionLevel(role);
+
+			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
+				return Unauthorized();
+			}
+
+			TimeRecord timeRecord = db.TimeRecors.Find(id);
+
+			if (timeRecord == null) {
+				return NotFound();
+			}
+
+			if (permissionLevel == PermissionLevel.Regular && userId != timeRecord.UserId) {
+				return Unauthorized();
+			}
+			else {
+
+				db.TimeRecors.Remove(timeRecord);
+				db.SaveChanges();
+				return Ok(timeRecord);
+			}
         }
 
         protected override void Dispose(bool disposing)
@@ -114,6 +183,19 @@ namespace TimeManagementSystem.API.Controllers
         private bool TimeRecordExists(int id)
         {
             return db.TimeRecors.Count(e => e.Id == id) > 0;
-        }
-    }
+		}
+
+		private PermissionLevel getPermissionLevel(string roleId) {
+			switch (roleId) {
+				case "0":
+					return PermissionLevel.Regular;
+				case "1":
+					return PermissionLevel.UserManager;
+				case "2":
+					return PermissionLevel.Administrator;
+				default:
+					return PermissionLevel.Undefined;
+			}
+		}
+	}
 }

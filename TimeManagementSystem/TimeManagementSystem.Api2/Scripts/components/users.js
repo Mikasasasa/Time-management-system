@@ -34,10 +34,18 @@
             }
         }
         self.saveUser = function () {
+            if (!isNormalInteger(self.user().PreferredWorkingHourPerDay)) {
+                toastr.error("PreferredWorkingHourPerDay is invalid");
+                return;
+            }
+            if (validPermissionLevels.indexOf(self.user().PermissionLevel) > -1) {
+                toastr.error("PermissionLevel is invalid");
+                return;
+            }
             if (action === "add") {
                 authenticatedRequest("Users", "post", ko.toJSON(self.user), function (data) {
                     toastr.success("User added successfully.");
-                    location.hash = "users/edit/" + self.user.Login;
+                    location.hash = "users/edit/" + self.user().Login;
                 },
                 function (data) {
                     var errorDescription = JSON.parse(data.responseText).ModelState[""][0];

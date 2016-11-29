@@ -27,6 +27,10 @@
             });
         };
         self.register = function () {
+            if (validPermissionLevels.indexOf(permissionLevels) > -1) {
+                toastr.error("PermissionLevel is invalid");
+                return;
+            }
             if (self.password() === self.confirmPassword()) {
                 $.post("http://localhost:4599/api/Users", { Login: self.login, Password: self.password, PermissionLevel: self.permissionLevel })
                 .done(function (data) {

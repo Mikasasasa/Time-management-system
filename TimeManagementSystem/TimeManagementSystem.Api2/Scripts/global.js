@@ -5,6 +5,8 @@
         administrator: "2"
     };
 
+    validPermissionLevels = ["0", "1", "2"];
+
     authenticatedRequest = function (url, method, data, success, fail) {
         var token = localStorage.getItem("token");
         if (token !== null) {
@@ -59,5 +61,10 @@
         } else {
             location.hash = "auth";
         }
+    };
+
+    isNormalInteger = function (str) {
+        var n = ~~Number(str);
+        return String(n) === str && n >= 0;
     };
 }());

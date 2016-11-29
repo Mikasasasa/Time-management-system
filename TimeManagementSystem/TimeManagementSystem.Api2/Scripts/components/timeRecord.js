@@ -24,6 +24,10 @@
         }
 
         self.saveRecord = function () {
+            if (!isNormalInteger(self.record().Length)) {
+                toastr.error("Length is invalid");
+                return;
+            }
             if (action === "add") {
                 authenticatedRequest("TimeRecords", "post", ko.toJSON(self.record), function (data) {
                     toastr.success("Record added successfully.");

@@ -1,11 +1,15 @@
 ﻿<div id="container">
-	<span data-bind="click: setLoggingIn">Log in</span>
-	<span data-bind="click: setRegistering">Sign in</span>
-
-	<input type="text" data-bind="value: login" />
-	<input type="password" data-bind="value: password" />
-	<input type="password" data-bind="visible: isRegistration, value: confirmPassword" />
-	<select data-bind="value: permissionLevel, options: permissionLevels, optionsText: 'name', optionsValue: 'value', visible: isRegistration" />
+	<button data-bind="click: setLoggingIn">Log in</button>
+	<button data-bind="click: setRegistering">Sign in</button>
+	<hr />
+	<label for="login">Login</label>
+	<input type="text" data-bind="value: login" id="login" /><br />
+	<label for="password">Password</label>
+	<input type="password" data-bind="value: password" id="password"/><br />
+	<label for="confirmPassword" data-bind="visible: isRegistration">Confirm password</label>
+	<input type="password" data-bind="visible: isRegistration, value: confirmPassword" id="confirmPassword" /><br />
+	<label for="permissionLevel" data-bind="visible: isRegistration">Permission level</label>
+	<select data-bind="value: permissionLevel, options: permissionLevels, optionsText: 'name', optionsValue: 'value', visible: isRegistration" id="permissionLevel" /><br />
 	<input type="submit" data-bind="visible: !isRegistration(), click: logIn" value="Log in" />
 	<input type="submit" data-bind="visible: isRegistration, click: register" value="Register" />
 </div>

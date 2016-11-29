@@ -93,6 +93,36 @@
             return self.records().filter(isInFilter);
         });
 
+        self.generateExportContent = function () {
+            var doc = document.implementation.createHTMLDocument("Time records");
+
+            var records = self.filteredRecords();
+
+            var ul = doc.createElement("ul");
+            for (var i = 0; i < records.length; ++i) {
+                var dateLi = doc.createElement("li");
+                dateLi.innerHTML = "Date: " + moment(records[i].date).format('DD.M');
+                ul.appendChild(dateLi);
+                var lenghtLi = doc.createElement("li");
+                lenghtLi.innerHTML = "Total time: " + records[i].length + "h";
+                ul.appendChild(lenghtLi);
+                var notesLi = doc.createElement("li");
+                notesLi.innerHTML = "Notes: ";
+                ul.appendChild(notesLi);
+                var notesUl = doc.createElement("ul");
+                for (var j = 0; j < records[i].notes.length; ++j) {
+                    var noteLi = doc.createElement("li");
+                    noteLi.innerHTML = records[i].notes[j];
+                    notesUl.appendChild(noteLi);
+                }
+                ul.appendChild(notesUl);
+            }
+
+            doc.body.appendChild(ul);
+
+            window.open("data:application/octet-stream;filename=records.html;charset=utf-8;base64," + encodeURI(window.btoa(doc.documentElement.outerHTML)), '_blank');
+        };
+
         authenticatedRequest("Users", "get", {}, function (data) {
             self.PrefferedWorkingHours(JSON.parse(data)[0].PreferredWorkingHourPerDay);
             authenticatedRequest("TimeRecords", "get", {}, function (data) {

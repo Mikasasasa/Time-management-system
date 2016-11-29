@@ -138,9 +138,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="content\toastr.css" />
+    <Content Include="content\toastr.min.css" />
     <Content Include="Index.html" />
     <Content Include="Scripts\components\auth.js" />
     <Content Include="Scripts\components\home.js" />
+    <Content Include="content\toastr.scss" />
+    <Content Include="content\toastr.less" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\components\timeRecord.js" />
     <Content Include="Scripts\components\users.js" />
@@ -158,6 +162,8 @@
     <Content Include="Scripts\sammy-0.7.5.js" />
     <Content Include="Scripts\sammy-0.7.5.min.js" />
     <Content Include="Scripts\sammy.template.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Views\auth.html" />
     <Content Include="Views\menu.html" />
     <Content Include="Views\timeRecord.html" />
@@ -173,7 +179,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AuthContext.cs" />
-    <Compile Include="AuthRepository.cs" />
+    <Compile Include="UserRepository.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\TimeRecordsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />

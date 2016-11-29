@@ -19,7 +19,7 @@ namespace TimeManagementSystem.API {
 			string role;
 			string userId;
 
-			using (AuthRepository _repo = new AuthRepository()) {
+			using (UserRepository _repo = new UserRepository()) {
 				IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
 
 				if (user == null) {

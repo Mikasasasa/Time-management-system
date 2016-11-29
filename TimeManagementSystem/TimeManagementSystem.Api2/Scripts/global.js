@@ -19,10 +19,15 @@
                 },
                 data: data
             }).always(function (data) {
-                if (data.status === 200 || data.status === 204 || data.status === 201) {
-                    success(JSON.parse(data.responseText));
+                if (data !== undefined) {
+                    if (data.status === 200 || data.status === 204 || data.status === 201) {
+                        success(data.responseText);
+                    } else {
+                        fail(data.responseText);
+                    }
                 } else {
-                    fail();
+                    //special case
+                    success();
                 }
             });
         } else {
@@ -49,6 +54,7 @@
             self.canSeeTimeRecords = ko.observable(role === permissionLevel.regular || role === permissionLevel.administrator);
             self.canSeeUsers = ko.observable(role === permissionLevel.userManager || role === permissionLevel.administrator);
             self.canSeeMyProfile = ko.observable(role === permissionLevel.regular);
+            self.canSeeCalendar = ko.observable(role === permissionLevel.regular);
             self.isMenuVisible(true);
         } else {
             location.hash = "auth";

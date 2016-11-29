@@ -17,40 +17,38 @@
         } else {
             if (action === "edit") {
                 authenticatedRequest("Users", "get", { username: userName }, function (data) {
-                    self.user(data);
+                    self.user(JSON.parse(data));
                 },
-                function () {
-                    alert("not such user");
+                function (data) {
+                    toastr.error("Unautorized access.");
                     location.hash = "timeRecords";
                 });
             } else {
                 authenticatedRequest("Users", "get", {}, function (data) {
-                    self.user(data[0]);
+                    self.user(JSON.parse(data)[0]);
                 },
-                function () {
-                    alert("not such user");
+                function (data) {
+                    toastr.error("Unautorized access.");
                     location.hash = "timeRecords";
                 });
             }
         }
-        self.goToTimeRecords = function () {
-            location.hash = "timeRecords/" + id;
-        };
         self.saveUser = function () {
             if (action === "add") {
                 authenticatedRequest("Users", "post", ko.toJSON(self.user), function (data) {
-                    alert("ok");
-                    location.hash = "users/edit/" + data.Login;
+                    toastr.success("User added successfully.");
+                    location.hash = "users/edit/" + self.user.Login;
                 },
-                function () {
-                    alert("not ok");
+                function (data) {
+                    var errorDescription = JSON.parse(data.responseText).ModelState[""][0];
+                    toastr.error(errorDescription);
                 });
             } else {
                 authenticatedRequest("Users/" + self.user().Id, "put", ko.toJSON(self.user), function (data) {
-                    alert("ok");
+                    toastr.success("User updated successfully.");
                 },
                 function () {
-                    alert("not ok");
+                    toastr.error("Unautorized access.");
                 });
             }
         };
@@ -61,12 +59,13 @@
         self.users = ko.observableArray();
 
         authenticatedRequest("Users", "get", ko.toJSON(self.user), function (data) {
-            for (var i = 0, len = data.length; i < len; ++i) {
-                self.users.push(data[i]);
+            var responseArray = JSON.parse(data);
+            for (var i = 0, len = responseArray.length; i < len; ++i) {
+                self.users.push(responseArray[i]);
             }
         },
         function () {
-            alert("Error");
+            toastr.error("Unautorized access.");
         });
         self.addUser = function () {
             location.hash = "users/add";
@@ -79,10 +78,10 @@
                 var removedItem = this;
                 authenticatedRequest("Users/" + removedItem.Id, "delete", {}, function (data) {
                     self.users.remove(removedItem);
-                    alert("ok");
+                    toastr.success("User deleted successfully.");
                 },
                 function () {
-                    alert("removing failed");
+                    toastr.error("Unautorized access.");
                 });
             }
         };

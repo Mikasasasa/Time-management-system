@@ -8,26 +8,28 @@ using System.Web;
 using TimeManagementSystem.API.Models;
 
 namespace TimeManagementSystem.API {
-	public class AuthRepository : IDisposable {
+	public class UserRepository : IDisposable {
 		private AuthContext _ctx;
 
 		private UserManager<ExtendedIdentityUser> _userManager;
 
-		public AuthRepository() {
+		public UserRepository() {
 			_ctx = new AuthContext();
 			_userManager = new UserManager<ExtendedIdentityUser>(new UserStore<ExtendedIdentityUser>(_ctx));
 		}
 
-		public async Task<IdentityUser> RegisterUser(User user) {
+		public async Task<IdentityResult> RegisterUser(User user) {
 			var authUser = new ExtendedIdentityUser {
 				UserName = user.Login,
 				PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
 			};
 
 			var result = await _userManager.CreateAsync(authUser, user.Password);
-			var result2 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
+			if (result.Succeeded) {
+				result = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
+			}
 
-			return authUser;
+			return result;
 		}
 
 		public async Task<IdentityUser> FindUser(string userName, string password) {
@@ -46,7 +48,7 @@ namespace TimeManagementSystem.API {
 			return _userManager.Users.ToList();
 		}
 
-		public async void UpdateUser(User user) {
+		public async Task<IdentityResult> UpdateUser(User user) {
 			var authUser = await _userManager.FindByIdAsync(user.Id);
 			authUser.UserName = user.Login;
 			authUser.PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay;
@@ -55,11 +57,13 @@ namespace TimeManagementSystem.API {
 				var result2 = await _userManager.RemoveFromRoleAsync(authUser.Id, authUser.Roles.FirstOrDefault().RoleId);
 				var result3 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
 			}
+			return result;
 		}
 
-		public async void DeleteUser(string id) {
+		public async Task<IdentityResult> DeleteUser(string id) {
 			var authUser = await _userManager.FindByIdAsync(id);
 			var result = await _userManager.DeleteAsync(authUser);
+			return result;
 		}
 
 		public void Dispose() {

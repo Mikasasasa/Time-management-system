@@ -14,11 +14,11 @@
             });
         } else {
             authenticatedRequest("TimeRecords", "get", { id: id }, function (data) {
-                self.record(data);
-                self.date(moment(data.StartDate).format('YYYY-MM-DD'));
+                self.record(JSON.parse(data));
+                self.date(moment(JSON.parse(data).StartDate).format('YYYY-MM-DD'));
             },
-            function () {
-                alert("not such record");
+            function (data) {
+                toastr.error("No such record");
                 location.hash = "timeRecords";
             });
         }
@@ -26,19 +26,19 @@
         self.saveRecord = function () {
             if (action === "add") {
                 authenticatedRequest("TimeRecords", "post", ko.toJSON(self.record), function (data) {
-                    alert("ok");
-                    location.hash = "timeRecords/edit/" + data.Id;
+                    toastr.success("Record added successfully.");
+                    location.hash = "timeRecords/edit/" + JSON.parse(data).Id;
                 },
-                function () {
-                    alert("not ok");
+                function (data) {
+                    toastr.error(JSON.parse(data).Message);
                 });
             } else {
                 self.record().StartDate = self.date();
                 authenticatedRequest("TimeRecords/" + self.record().Id, "put", ko.toJSON(self.record), function (data) {
-                    alert("ok");
+                    toastr.success("Record updated successfully.");
                 },
-                function () {
-                    alert("not ok");
+                function (data) {
+                    toastr.error(JSON.parse(data).Message);
                 });
             }
         };
@@ -49,12 +49,13 @@
         self.records = ko.observableArray();
 
         authenticatedRequest("TimeRecords", "get", {}, function (data) {
-            for (var i = 0, len = data.length; i < len; ++i) {
-                self.records.push(data[i]);
+            var responseArray = JSON.parse(data);
+            for (var i = 0, len = responseArray.length; i < len; ++i) {
+                self.records.push(responseArray[i]);
             }
         },
-        function () {
-            alert("Error");
+        function (data) {
+            toastr.error("Some error occured");
         });
 
         self.addRecord = function () {
@@ -68,10 +69,10 @@
                 var removedItem = this;
                 authenticatedRequest("TimeRecords/" + removedItem.Id, "delete", {}, function (data) {
                     self.records.remove(removedItem);
-                    alert("ok");
+                    toastr.success("Record deleted successfully");
                 },
                 function () {
-                    alert("removing failed");
+                    toastr.error("removing failed");
                 });
             }
         };
@@ -93,13 +94,14 @@
         });
 
         authenticatedRequest("Users", "get", {}, function (data) {
-            self.PrefferedWorkingHours(data[0].PreferredWorkingHourPerDay);
+            self.PrefferedWorkingHours(JSON.parse(data)[0].PreferredWorkingHourPerDay);
             authenticatedRequest("TimeRecords", "get", {}, function (data) {
                 var itemDate = null;
                 var itemHours = 0;
                 var itemNotes = [];
-                for (var i = 0, len = data.length; i < len; ++i) {
-                    var item = data[i];
+                var responseArray = JSON.parse(data);
+                for (var i = 0, len = responseArray.length; i < len; ++i) {
+                    var item = responseArray[i];
                     if (itemDate === item.StartDate) {
                         itemHours += item.Length;
                         itemNotes.push(item.Note);
@@ -125,11 +127,11 @@
                 });
             },
             function () {
-                alert("Error");
+                toastr.error("Some error occured");
             });
         },
         function () {
-            alert("not such user");
+            toastr.error("Some error occured");
             location.hash = "timeRecords";
         });
     }

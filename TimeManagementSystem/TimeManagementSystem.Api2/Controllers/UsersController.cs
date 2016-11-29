@@ -21,10 +21,10 @@ namespace TimeManagementSystem.API.Controllers
     {
         private TimeManagementSystemContext db = new TimeManagementSystemContext();
 
-		private AuthRepository _repo;
+		private UserRepository _repo;
 
 		public UsersController() {
-			_repo = new AuthRepository();
+			_repo = new UserRepository();
 		}
 
 		// GET: api/Users
@@ -82,7 +82,7 @@ namespace TimeManagementSystem.API.Controllers
 		// PUT: api/Users/5
 		[ResponseType(typeof(void))]
 		[Authorize]
-		public IHttpActionResult PutUser(string id, User user) {
+		public async Task<IHttpActionResult> PutUser(string id, User user) {
 			if (!ModelState.IsValid) {
 				return BadRequest(ModelState);
 			}
@@ -98,11 +98,11 @@ namespace TimeManagementSystem.API.Controllers
 			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
 			if (_repo.getPermissionLevel(role) != PermissionLevel.Regular) {
-				_repo.UpdateUser(user);
+				await _repo.UpdateUser(user);
 			} else {
 				if (id == userId) {
 					user.PermissionLevel = PermissionLevel.Undefined;
-					_repo.UpdateUser(user);
+					await _repo.UpdateUser(user);
 				} else {
 					return Unauthorized();
 				}
@@ -121,13 +121,37 @@ namespace TimeManagementSystem.API.Controllers
 
 			var result = await _repo.RegisterUser(user);
 
-			return Ok(new User { Login = user.Login });
+			var errorResult = GetErrorResult(result);
+
+			if (errorResult != null) {
+				return errorResult;
+			}
+
+			return Ok();
+		}
+
+		private IHttpActionResult GetErrorResult(IdentityResult result) {
+			if (result == null) {
+				return InternalServerError();
+			}
+
+			if (!result.Succeeded) {
+				if (result.Errors != null) {
+					foreach (string error in result.Errors) {
+						ModelState.AddModelError("", error);
+					}
+				}
+
+				return BadRequest(ModelState);
+			}
+
+			return null;
 		}
 
 		// DELETE: api/Users/5
 		[ResponseType(typeof(User))]
 		[Authorize]
-		public IHttpActionResult DeleteUser(string id)
+		public async Task<IHttpActionResult> DeleteUser(string id)
         {
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
@@ -135,7 +159,7 @@ namespace TimeManagementSystem.API.Controllers
 			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
 
 			if (_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
-				_repo.DeleteUser(id);
+				await _repo.DeleteUser(id);
 			}
 			else {
 				return Unauthorized();

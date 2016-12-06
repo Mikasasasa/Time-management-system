@@ -19,7 +19,7 @@ namespace TimeManagementSystem.API.Controllers
         private AuthContext db = new AuthContext();
 
         // GET: api/TimeRecords
-		[Authorize]
+		[Authorize(Roles ="Administrator")]
 		[ResponseType(typeof(IList<TimeRecord>))]
 		public IHttpActionResult GetTimeRecors() {
 			var identity = (ClaimsIdentity)User.Identity;

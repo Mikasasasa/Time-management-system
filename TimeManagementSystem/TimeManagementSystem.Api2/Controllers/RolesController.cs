@@ -18,7 +18,7 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			return Ok(claims.FirstOrDefault(claim => claim.Type == "role").Value);
+			return Ok(claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value);
 		}
 	}
 }

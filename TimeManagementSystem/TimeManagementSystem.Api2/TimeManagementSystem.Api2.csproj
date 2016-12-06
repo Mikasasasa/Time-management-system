@@ -179,27 +179,12 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AuthContext.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="RoleRepository.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\TimeRecordsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Migrations\201611261834325_InitialCreate.cs" />
-    <Compile Include="Migrations\201611261834325_InitialCreate.Designer.cs">
-      <DependentUpon>201611261834325_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611261854540_Migration1.cs" />
-    <Compile Include="Migrations\201611261854540_Migration1.Designer.cs">
-      <DependentUpon>201611261854540_Migration1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611282001114_Migration2.cs" />
-    <Compile Include="Migrations\201611282001114_Migration2.Designer.cs">
-      <DependentUpon>201611282001114_Migration2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611282001362_Migration3.cs" />
-    <Compile Include="Migrations\201611282001362_Migration3.Designer.cs">
-      <DependentUpon>201611282001362_Migration3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ExtendedIdentityUser.cs" />
     <Compile Include="Models\PermissionLevel.cs" />
     <Compile Include="Models\TimeRecord.cs" />
@@ -222,20 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611261834325_InitialCreate.resx">
-      <DependentUpon>201611261834325_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611261854540_Migration1.resx">
-      <DependentUpon>201611261854540_Migration1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611282001114_Migration2.resx">
-      <DependentUpon>201611282001114_Migration2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611282001362_Migration3.resx">
-      <DependentUpon>201611282001362_Migration3.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -26,14 +26,17 @@ namespace TimeManagementSystem.API {
 					context.SetError("invalid_grant", "The user name or password is incorrect.");
 					return;
 				}
-				role = user.Roles.FirstOrDefault().RoleId;
+				var roleId = user.Roles.FirstOrDefault().RoleId;
+				using (var _roleRepo = new RoleRepository()) {
+					role = await _roleRepo.GetRoleNameById(roleId);
+				}
 				userId = user.Id;
 			}
 
 			var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 			identity.AddClaim(new Claim("userId", userId));
 			identity.AddClaim(new Claim("username", context.UserName));
-			identity.AddClaim(new Claim("role", role));
+			identity.AddClaim(new Claim(ClaimTypes.Role, role));
 
 			context.Validated(identity);
 

@@ -9,7 +9,7 @@ using TimeManagementSystem.API.Models;
 namespace TimeManagementSystem.API {
 	public class AuthContext : IdentityDbContext<IdentityUser> {
 		public AuthContext() :base("AuthContext") {
-
+			Database.SetInitializer(new DbInitializer());
 		}
 		public DbSet<TimeRecord> TimeRecors { get; set; }
 	}

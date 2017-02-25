@@ -1,18 +1,20 @@
 ﻿(function () {
     'use strict';
 
-    angular.module('app', ['ngRoute']);
+    angular.module('app', ['ui.router']);
 
-    angular.module('app').config(function ($routeProvider) {
-        $routeProvider
-        .when("/login", {
+    angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
+        $stateProvider
+        .state("login", {
+            url: "/login",
             templateUrl: "app/authorization/authorization.html",
             controller: "AuthorizationController"
         })
-        .when("/home", {
+        .state("/home", {
+            url: "/home",
             templateUrl: "app/home/home.html"
-        })
-        .otherwise({ redirectTo: "/login" });
+        });
+        $urlRouterProvider.otherwise("/login");
     });
 
 })();

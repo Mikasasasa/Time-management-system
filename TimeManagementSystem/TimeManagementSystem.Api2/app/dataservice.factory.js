@@ -5,8 +5,6 @@
         .module('app')
         .factory('dataservice', dataservice);
 
-    dataservice.$inject = ['$http', "$location"];
-
     function dataservice($http, $location) {
         return {
             loginIntoApp: loginIntoApp

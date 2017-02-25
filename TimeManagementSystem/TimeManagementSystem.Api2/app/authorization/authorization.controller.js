@@ -5,8 +5,6 @@
         .module('app')
         .controller('AuthorizationController', AuthorizationController);
 
-    AuthorizationController.$inject = ['dataservice'];
-
     function AuthorizationController(dataservice) {
         var vm = this;
 

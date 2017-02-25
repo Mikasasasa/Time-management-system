@@ -8,7 +8,7 @@
         .state("login", {
             url: "/login",
             templateUrl: "app/authorization/authorization.html",
-            controller: "AuthorizationController"
+            controller: "AuthorizationController as vm"
         })
         .state("/home", {
             url: "/home",

@@ -3,7 +3,10 @@
 
     angular.module('app', ['ui.router']);
 
-    angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
+    angular.module('app')
+        .config(stateProviderConfig);
+
+    function stateProviderConfig($stateProvider, $urlRouterProvider) {
         $stateProvider
         .state('app', {
             abstract: true,
@@ -11,6 +14,19 @@
             views: {
                 header: {
                     template: 'header'
+                },
+                content: {},
+                footer: {
+                    template: 'footer'
+                }
+            }
+        })
+        .state('anonymous', {
+            abstract: true,
+            url: '/',
+            views: {
+                header: {
+                    templateUrl: 'app/components/anonymous-header/header.html'
                 },
                 content: {},
                 footer: {
@@ -27,6 +43,6 @@
             }
         });
         $urlRouterProvider.otherwise("/login");
-    });
+    }
 
 })();

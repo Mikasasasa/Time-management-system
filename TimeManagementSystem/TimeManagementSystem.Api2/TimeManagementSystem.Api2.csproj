@@ -139,8 +139,12 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="app\app.module.js" />
-    <Content Include="app\authorization\authorization.controller.js" />
-    <Content Include="app\authorization\authorization.html" />
+    <Content Include="app\components\anonymous-header\header.html" />
+    <Content Include="app\components\app-header\header.html" />
+    <Content Include="app\components\authorization\authorization.controller.js" />
+    <Content Include="app\components\authorization\authorization.html" />
+    <Content Include="app\components\registration\registration.controller.js" />
+    <Content Include="app\components\registration\registration.html" />
     <Content Include="app\dataservice.factory.js" />
     <Content Include="app\home\home.html" />
     <Content Include="content\toastr.css" />
@@ -984,6 +988,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\common\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>

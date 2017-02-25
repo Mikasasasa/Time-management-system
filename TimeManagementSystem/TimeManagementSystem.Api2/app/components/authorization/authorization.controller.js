@@ -8,12 +8,11 @@
 
     function stateProviderConfig($stateProvider) {
         $stateProvider
-        .state('app.login', {
+        .state('anonymous.login', {
             url: 'login',
             views: {
-                'header@': {},
                 'content@': {
-                    templateUrl: 'app/authorization/authorization.html',
+                    templateUrl: 'app/components/authorization/authorization.html',
                     controller: 'AuthorizationController as vm'
                 },
             }

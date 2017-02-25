@@ -7,7 +7,8 @@
 
     function dataservice($http, $state) {
         return {
-            loginIntoApp: loginIntoApp
+            loginIntoApp: loginIntoApp,
+            register: register
         };
 
         function loginIntoApp(login, password) {
@@ -33,6 +34,26 @@
                 var errorDescription = data.data.error_description;
                 toastr.error(errorDescription);
             });
+        }
+
+        function register(login, password) {
+            return $http({
+                method: 'POST',
+                url: '/api/Users',
+                data: {
+                    Login: login,
+                    Password: password,
+                    PermissionLevel: 0
+                }
+            })
+            .then(function (data) {
+                toastr.success("User created");
+                $state.transitionTo('anonymous.login');
+            })
+            .catch(function (data) {
+                var errorDescription = data.data.ModelState[""][0];
+                toastr.error(errorDescription);
+            })
         }
     }
 

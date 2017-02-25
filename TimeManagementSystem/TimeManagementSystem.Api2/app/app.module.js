@@ -5,14 +5,26 @@
 
     angular.module('app').config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
-        .state("login", {
-            url: "/login",
-            templateUrl: "app/authorization/authorization.html",
-            controller: "AuthorizationController as vm"
+        .state('app', {
+            abstract: true,
+            url: '/',
+            views: {
+                header: {
+                    template: 'header'
+                },
+                content: {},
+                footer: {
+                    template: 'footer'
+                }
+            }
         })
-        .state("/home", {
+        .state("app.home", {
             url: "/home",
-            templateUrl: "app/home/home.html"
+            views: {
+                'content@': {
+                    templateUrl: 'app/home/home.html'
+                },
+            }
         });
         $urlRouterProvider.otherwise("/login");
     });

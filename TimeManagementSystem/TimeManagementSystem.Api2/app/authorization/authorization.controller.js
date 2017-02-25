@@ -3,7 +3,22 @@
 
     angular
         .module('app')
-        .controller('AuthorizationController', AuthorizationController);
+        .controller('AuthorizationController', AuthorizationController)
+        .config(stateProviderConfig);
+
+    function stateProviderConfig($stateProvider) {
+        $stateProvider
+        .state('app.login', {
+            url: 'login',
+            views: {
+                'header@': {},
+                'content@': {
+                    templateUrl: 'app/authorization/authorization.html',
+                    controller: 'AuthorizationController as vm'
+                },
+            }
+        });
+    }
 
     function AuthorizationController(dataservice) {
         var vm = this;

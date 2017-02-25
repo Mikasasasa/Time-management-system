@@ -5,7 +5,7 @@
         .module('app')
         .factory('dataservice', dataservice);
 
-    function dataservice($http, $location) {
+    function dataservice($http, $state) {
         return {
             loginIntoApp: loginIntoApp
         };
@@ -27,7 +27,7 @@
             })
             .then(function (data) {
                 localStorage.setItem("token", "Bearer " + data.data.access_token);
-                $location.path("/home");
+                $state.transitionTo('app.home');
             })
             .catch(function (data) {
                 var errorDescription = data.data.error_description;

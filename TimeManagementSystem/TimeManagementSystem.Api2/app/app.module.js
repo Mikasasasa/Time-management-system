@@ -13,7 +13,8 @@
             url: '/',
             views: {
                 header: {
-                    template: 'header'
+                    templateUrl: 'app/components/app-header/header.html',
+                    controller: 'HeaderController as vm'
                 },
                 content: {},
                 footer: {
@@ -35,10 +36,10 @@
             }
         })
         .state("app.home", {
-            url: "/home",
+            url: "/",
             views: {
                 'content@': {
-                    templateUrl: 'app/home/home.html'
+                    templateUrl: 'app/components/home/home.html'
                 },
             }
         });

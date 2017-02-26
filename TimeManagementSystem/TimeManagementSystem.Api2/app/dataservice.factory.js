@@ -8,7 +8,8 @@
     function dataservice($http, $state) {
         return {
             loginIntoApp: loginIntoApp,
-            register: register
+            register: register,
+            request: request
         };
 
         function loginIntoApp(login, password) {
@@ -53,8 +54,67 @@
             .catch(function (data) {
                 var errorDescription = data.data.ModelState[""][0];
                 toastr.error(errorDescription);
-            })
+            });
         }
+
+        function request(controller, method, data, onSuccess, onError) {
+            var token = localStorage.getItem("token");
+            if (token !== null) {
+                return $http({
+                    method: method,
+                    url: '/api/' + controller,
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                })
+                .then(function (data) {
+                    onSuccess(data);
+                })
+                .catch(function (data) {
+                    onError(data);
+                });
+            } else {
+                localStorage.removeItem("token");
+                localStorage.removeItem("role");
+                $state.transitionTo('anonymous.login');
+            }
+        }
+
+        //function (url, method, data, success, fail) {
+        //    var token = localStorage.getItem("token");
+        //    if (token !== null) {
+        //        $.ajax({
+        //            url: "http://localhost:4599/api/" + url,
+        //            type: method,
+        //            dataType: "jsonp",
+        //            headers: { "Content-Type": "application/json", "Accept": "application/json", "Authorization": "OAuth oauth_token=ACCESSTOKEN" },
+        //            contentType: "application/json",
+        //            beforeSend: function (xhr) {
+        //                xhr.setRequestHeader("Authorization", token);
+        //            },
+        //            data: data
+        //        }).always(function (data) {
+        //            if (data !== undefined) {
+        //                if (data.status === 200 || data.status === 204 || data.status === 201) {
+        //                    success(data.responseText);
+        //                } else {
+        //                    fail(data.responseText);
+        //                }
+        //            } else {
+        //                //special case
+        //                success();
+        //            }
+        //        });
+        //    } else {
+        //        localStorage.removeItem("token");
+        //        localStorage.removeItem("role");
+        //        location.hash = "auth";
+        //    }
+
+        //};
     }
 
 })();

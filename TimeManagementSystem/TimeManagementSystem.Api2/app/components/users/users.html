@@ -1,0 +1,21 @@
+﻿<button ng-click="vm.addUser()">Add user</button>
+<h2>Users:</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Login</th>
+			<th>PermissionLevel</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody ng-repeat="item in vm.users">
+		<tr>
+			<td>{{ item.Login }}</td>
+			<td>{{ item.PermissionLevel }}</td>
+			<td>
+				<button ng-click="vm.editUser(item.Login)">Edit</button>
+				<button ng-click="vm.removeUser(item.Id)">Remove</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

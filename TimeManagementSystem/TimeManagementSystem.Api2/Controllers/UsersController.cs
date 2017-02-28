@@ -34,7 +34,7 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			var username = claims.FirstOrDefault(claim => claim.Type == "username").Value;
 
 			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {

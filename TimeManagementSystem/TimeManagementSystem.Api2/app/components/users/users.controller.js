@@ -16,7 +16,7 @@
                 url: '',
                 views: {
                     'content@': {
-                        templateUrl: 'app/components/authorization/authorization.html',
+                        templateUrl: 'app/components/users/users.html',
                         controller: 'UsersController as vm'
                     },
                 }
@@ -27,6 +27,9 @@
         var vm = this;
 
         vm.users = [];
+        vm.addUser = addUser;
+        vm.editUser = editUser;
+        vm.removeUser = removeUser;
 
         fetchUsers();
 
@@ -35,11 +38,23 @@
         }
 
         function fetchUsersSuccess(data) {
-            vm.users = data;
+            vm.users = data.data;
         };
 
         function fetchUsersError(data) {
             toastr.error("Unauthorized access.");
+        }
+
+        function addUser() {
+
+        }
+        
+        function editUser(login) {
+            alert(login);
+        }
+
+        function removeUser(id) {
+            alert(id);
         }
     }
 

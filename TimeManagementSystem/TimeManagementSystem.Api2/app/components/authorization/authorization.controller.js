@@ -19,7 +19,7 @@
         });
     }
 
-    function AuthorizationController(dataservice) {
+    function AuthorizationController(dataservice, $state) {
         var vm = this;
 
         vm.login = '';
@@ -27,7 +27,9 @@
         vm.logIntoApp = logIntoApp;
 
         function logIntoApp() {
-            return dataservice.loginIntoApp(vm.login, vm.password)
+            dataservice.loginIntoApp(vm.login, vm.password).then(function (data) {
+                $state.transitionTo('app.home');
+            });
         }
     }
 

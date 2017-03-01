@@ -19,7 +19,7 @@
         });
     }
 
-    function RegistrationController(dataservice) {
+    function RegistrationController(dataservice, $state) {
         var vm = this;
 
         vm.login = '';
@@ -29,7 +29,10 @@
 
         function register() {
             if (vm.password === vm.confirmPassword) {
-                return dataservice.register(vm.login, vm.password)
+                dataservice.register(vm.login, vm.password)
+                    .then(function (data) {
+                        $state.transitionTo('anonymous.login');
+                    });
             } else {
                 toastr.error("Passwords are not the same");
             }

@@ -5,7 +5,7 @@
         .module('app')
         .factory('dataservice', dataservice);
 
-    function dataservice($http, $state) {
+    function dataservice($http, $state, $q) {
         return {
             loginIntoApp: loginIntoApp,
             register: register,
@@ -29,11 +29,11 @@
             })
             .then(function (data) {
                 localStorage.setItem("token", "Bearer " + data.data.access_token);
-                $state.transitionTo('app.home');
             })
             .catch(function (data) {
                 var errorDescription = data.data.error_description;
                 toastr.error(errorDescription);
+                $q.reject();
             });
         }
 
@@ -49,11 +49,11 @@
             })
             .then(function (data) {
                 toastr.success("User created");
-                $state.transitionTo('anonymous.login');
             })
             .catch(function (data) {
                 var errorDescription = data.data.ModelState[""][0];
                 toastr.error(errorDescription);
+                $q.reject();
             });
         }
 

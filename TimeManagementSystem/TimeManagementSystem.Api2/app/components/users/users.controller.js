@@ -23,7 +23,7 @@
             });
     }
 
-    function UsersController(dataservice) {
+    function UsersController($http) {
         var vm = this;
 
         vm.users = [];
@@ -34,7 +34,16 @@
         fetchUsers();
 
         function fetchUsers() {
-            return dataservice.request("Users", "GET", {}, fetchUsersSuccess, fetchUsersError);
+            $http({
+                method: "GET",
+                url: '/api/Users'
+            })
+            .then(function (data) {
+                fetchUsersSuccess(data);
+            })
+            .catch(function (data) {
+                fetchUsersError(data);
+            });
         }
 
         function fetchUsersSuccess(data) {

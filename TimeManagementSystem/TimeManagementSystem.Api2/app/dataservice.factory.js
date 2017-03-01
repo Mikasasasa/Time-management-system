@@ -3,7 +3,9 @@
 
     angular
         .module('app')
-        .factory('dataservice', dataservice);
+        .factory('dataservice', dataservice)
+        .factory('authInterceptor', authInterceptor)
+        .config(authConfig);
 
     function dataservice($http, $state, $q) {
         return {
@@ -28,7 +30,7 @@
                 data: { username: login, password: password, grant_type: "password" }
             })
             .then(function (data) {
-                localStorage.setItem("token", "Bearer " + data.data.access_token);
+                localStorage.setItem("token", data.data.access_token);
             })
             .catch(function (data) {
                 var errorDescription = data.data.error_description;
@@ -82,39 +84,40 @@
                 $state.transitionTo('anonymous.login');
             }
         }
+    }
 
-        //function (url, method, data, success, fail) {
-        //    var token = localStorage.getItem("token");
-        //    if (token !== null) {
-        //        $.ajax({
-        //            url: "http://localhost:4599/api/" + url,
-        //            type: method,
-        //            dataType: "jsonp",
-        //            headers: { "Content-Type": "application/json", "Accept": "application/json", "Authorization": "OAuth oauth_token=ACCESSTOKEN" },
-        //            contentType: "application/json",
-        //            beforeSend: function (xhr) {
-        //                xhr.setRequestHeader("Authorization", token);
-        //            },
-        //            data: data
-        //        }).always(function (data) {
-        //            if (data !== undefined) {
-        //                if (data.status === 200 || data.status === 204 || data.status === 201) {
-        //                    success(data.responseText);
-        //                } else {
-        //                    fail(data.responseText);
-        //                }
-        //            } else {
-        //                //special case
-        //                success();
-        //            }
-        //        });
-        //    } else {
-        //        localStorage.removeItem("token");
-        //        localStorage.removeItem("role");
-        //        location.hash = "auth";
-        //    }
 
-        //};
+    function authInterceptor($q) {
+        return {
+            'request': function (config) {
+                var token = localStorage.getItem("token");
+                if (token === null) {
+                    return config;
+                }
+                config.headers['Content-Type'] = 'application/json';
+                config.headers['Accept'] = 'application/json';
+                config.headers['Authorization'] = `Bearer ${token}`;
+                return config;
+            },
+            'responseError': function (rejection) {
+                switch (rejection.status) {
+                    case 401:
+                        alert("401");
+                        break;
+                    case 403:
+                        alert("403");
+                        break;
+                }
+                if (canRecover(rejection)) {
+                    return responseOrNewPromise
+                }
+                return $q.reject(rejection);
+            }
+        }
+    }
+
+    function authConfig($httpProvider) {
+        $httpProvider.interceptors.push('authInterceptor');
     }
 
 })();

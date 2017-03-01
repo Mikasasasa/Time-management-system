@@ -139,6 +139,7 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="app\app.module.js" />
+    <Content Include="app\common\authInterceptor.factory.js" />
     <Content Include="app\components\anonymous-header\header.html" />
     <Content Include="app\components\app-header\header.controller.js" />
     <Content Include="app\components\app-header\header.html" />
@@ -148,7 +149,7 @@
     <Content Include="app\components\registration\registration.html" />
     <Content Include="app\components\users\users.controller.js" />
     <Content Include="app\components\users\users.html" />
-    <Content Include="app\dataservice.factory.js" />
+    <Content Include="app\common\dataservice.factory.js" />
     <Content Include="app\components\home\home.html" />
     <Content Include="content\toastr.css" />
     <Content Include="content\toastr.min.css" />
@@ -991,7 +992,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\common\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>

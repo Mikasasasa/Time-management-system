@@ -62,7 +62,7 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
 				return Unauthorized();
 			}
@@ -72,6 +72,7 @@ namespace TimeManagementSystem.API.Controllers
 				return NotFound();
 			}
 			var result = new User {
+				Id = user.Id,
 				Login = user.UserName,
 				PermissionLevel = _repo.getPermissionLevel(user.Roles.FirstOrDefault().RoleId),
 				PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay

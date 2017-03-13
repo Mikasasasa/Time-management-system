@@ -1,0 +1,29 @@
+﻿<form ng-submit="vm.saveMethod()">
+	<div>
+		<label for="login">Login:</label>
+		<input type="text" ng-model="vm.user.Login" id="login" /><br />
+	</div>
+	<div ng-hide="vm.isAddingMode">
+		<label for="oldPassword">Old password:</label>
+		<input type="password" ng-model="vm.oldPassword" id="oldPassword" /><br />
+	</div>
+	<div>
+		<label for="password">Password:</label>
+		<input type="password" ng-model="vm.user.Password" id="password" /><br />
+	</div>
+	<div>
+		<label for="passwordRepeat">Password repeat:</label>
+		<input type="password" ng-model="vm.passwordRepeat" id="passwordRepeat" /><br />
+	</div>
+	<div>
+		<label for="permissionLevel">PermissionLevel:</label>
+		<select ng-model="vm.user.PermissionLevel" id="permissionLevel">
+			<option ng-repeat="option in vm.permissionLevels" value="{{option.value}}">{{option.name}}</option>
+		</select><br />
+	</div>
+	<div>
+		<label for="preferredWorkingHourPerDay">PreferredWorkingHourPerDay:</label>
+		<input type="text" ng-model="vm.user.PreferredWorkingHourPerDay" id="preferredWorkingHourPerDay" /><br />
+	</div>
+	<input type="submit" value="{{vm.saveMethodName}}" />
+</form>

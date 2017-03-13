@@ -147,6 +147,8 @@
     <Content Include="app\components\authorization\authorization.html" />
     <Content Include="app\components\registration\registration.controller.js" />
     <Content Include="app\components\registration\registration.html" />
+    <Content Include="app\components\users\edit\user.controller.js" />
+    <Content Include="app\components\users\edit\user.html" />
     <Content Include="app\components\users\users.controller.js" />
     <Content Include="app\components\users\users.html" />
     <Content Include="app\common\dataservice.factory.js" />

@@ -23,7 +23,7 @@
             });
     }
 
-    function UsersController($http) {
+    function UsersController($http, $state) {
         var vm = this;
 
         vm.users = [];
@@ -55,49 +55,27 @@
         }
 
         function addUser() {
-
+            $state.transitionTo('app.users.add');
         }
-        
+
         function editUser(login) {
-            alert(login);
+            $state.transitionTo('app.users.edit', { login: login });
         }
 
-        function removeUser(id) {
-            alert(id);
+        function removeUser(user) {
+            if (confirm("Are you sure?")) {
+                $http({
+                    method: "DELETE",
+                    url: '/api/Users/' + user.Id
+                })
+                .then(function (data) {
+                    self.users.remove(user);
+                    toastr.success("User deleted successfully.");
+                })
+                .catch(function (data) {
+                    toastr.error("Unautorized access.");
+                });
+            }
         }
     }
-
-    //function UsersViewModel() {
-    //    var self = this;
-    //    self.users = ko.observableArray();
-
-    //    authenticatedRequest("Users", "get", ko.toJSON(self.user), function (data) {
-    //        var responseArray = JSON.parse(data);
-    //        for (var i = 0, len = responseArray.length; i < len; ++i) {
-    //            self.users.push(responseArray[i]);
-    //        }
-    //    },
-    //    function () {
-    //        toastr.error("Unautorized access.");
-    //    });
-    //    self.addUser = function () {
-    //        location.hash = "users/add";
-    //    };
-    //    self.editUser = function () {
-    //        location.hash = "users/edit/" + this.Login;
-    //    };
-    //    self.removeUser = function () {
-    //        if (confirm("Are you sure?")) {
-    //            var removedItem = this;
-    //            authenticatedRequest("Users/" + removedItem.Id, "delete", {}, function (data) {
-    //                self.users.remove(removedItem);
-    //                toastr.success("User deleted successfully.");
-    //            },
-    //            function () {
-    //                toastr.error("Unautorized access.");
-    //            });
-    //        }
-    //    };
-    //}
-
 })();

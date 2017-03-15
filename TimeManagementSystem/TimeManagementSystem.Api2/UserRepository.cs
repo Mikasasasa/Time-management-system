@@ -54,7 +54,7 @@ namespace TimeManagementSystem.API {
 			authUser.PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay;
 			var result = await _userManager.UpdateAsync(authUser);
 			if (user.PermissionLevel != getPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
-				var result2 = await _userManager.RemoveFromRoleAsync(authUser.Id, authUser.Roles.FirstOrDefault().RoleId);
+				var result2 = await _userManager.RemoveFromRolesAsync(authUser.Id, _userManager.GetRoles(authUser.Id).ToArray());
 				var result3 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
 			}
 			return result;

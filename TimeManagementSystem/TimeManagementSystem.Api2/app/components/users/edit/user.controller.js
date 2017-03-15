@@ -38,6 +38,7 @@
         vm.oldPassword = '';
         vm.passwordRepeat = '';
         vm.permissionLevels = [{ name: "regular", value: 0 }, { name: "user manager", value: 1 }, { name: "administrator", value: 2 }];
+        vm.selectedPermissionLevel = vm.permissionLevels[0];
 
         setUser();
 
@@ -51,6 +52,7 @@
                 })
                 .then(function (data) {
                     vm.user = data.data;
+                    setPermissionLevel(vm.user.PermissionLevel);
                     vm.saveMethod = editUser;
                     vm.saveMethodName = "save";
                     vm.isAddingMode = false;
@@ -68,6 +70,7 @@
         }
 
         function addUser() {
+            vm.user.PermissionLevel = vm.selectedPermissionLevel.value;
             $http({
                 method: "POST",
                 url: '/api/Users',
@@ -80,6 +83,7 @@
         }
 
         function editUser(login) {
+            vm.user.PermissionLevel = vm.selectedPermissionLevel.value;
             $http({
                 method: "PUT",
                 url: '/api/Users',
@@ -90,6 +94,16 @@
                 toastr.success("User updated successfully.");
                 $state.transitionTo('app.users.edit', { login: vm.user.Login });
             });
+        }
+
+        function setPermissionLevel(permissionLevel) {
+            for (var i = 0; i < vm.permissionLevels.length; ++i) {
+                var item = vm.permissionLevels[i];
+                if (item.value === permissionLevel) {
+                    vm.selectedPermissionLevel = item;
+                    break;
+                }
+            }
         }
 
         //function UserViewModel(action, userName) {

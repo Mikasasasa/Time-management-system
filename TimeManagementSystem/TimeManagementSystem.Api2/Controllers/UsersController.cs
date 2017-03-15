@@ -95,7 +95,7 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
 			if (_repo.getPermissionLevel(role) != PermissionLevel.Regular) {
@@ -157,7 +157,7 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 
 			if (_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
 				await _repo.DeleteUser(id);

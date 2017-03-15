@@ -17,8 +17,7 @@
 	</div>
 	<div>
 		<label for="permissionLevel">PermissionLevel:</label>
-		<select ng-model="vm.user.PermissionLevel" id="permissionLevel">
-			<option ng-repeat="option in vm.permissionLevels" value="{{option.value}}">{{option.name}}</option>
+		<select id="permissionLevel" ng-options="item as item.name for item in vm.permissionLevels track by item.value" ng-model="vm.selectedPermissionLevel">
 		</select><br />
 	</div>
 	<div>

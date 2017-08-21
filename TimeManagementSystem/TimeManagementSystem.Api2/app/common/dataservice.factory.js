@@ -32,7 +32,7 @@
             .catch(function (data) {
                 var errorDescription = data.data.error_description;
                 toastr.error(errorDescription);
-                $q.reject();
+                return $q.reject();
             });
         }
 
@@ -52,7 +52,7 @@
             .catch(function (data) {
                 var errorDescription = data.data.ModelState[""][0];
                 toastr.error(errorDescription);
-                $q.reject();
+                return $q.reject();
             });
         }
     }

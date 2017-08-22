@@ -7,7 +7,11 @@
 
     function HeaderController($state) {
         var vm = this;
+        var role = localStorage.getItem("role");
 
+        vm.isAdministrator = role === "Administrator";
+        vm.isUserManager = role === "UserManager";
+        vm.isRegular = role === "Regular";
         vm.logOut = logOut;
 
         function logOut() {

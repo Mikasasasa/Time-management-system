@@ -19,7 +19,7 @@
         });
     }
 
-    function AuthorizationController(dataservice, $state) {
+    function AuthorizationController(dataservice, $state, $http) {
         var vm = this;
 
         vm.login = '';
@@ -28,8 +28,14 @@
 
         function logIntoApp() {
             dataservice.loginIntoApp(vm.login, vm.password).then(function (data) {
-                $state.transitionTo('app.home');
-            });
+                $http({
+                    method: "GET",
+                    url: '/api/Roles'
+                }).then(function (data) {
+                    localStorage.setItem("role", data.data);
+                    $state.transitionTo('app.home');
+                });
+            }); 
         }
     }
 

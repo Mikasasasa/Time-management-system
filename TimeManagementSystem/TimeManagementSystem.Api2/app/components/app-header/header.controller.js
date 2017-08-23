@@ -12,6 +12,8 @@
         vm.isAdministrator = role === "Administrator";
         vm.isUserManager = role === "UserManager";
         vm.isRegular = role === "Regular";
+        vm.user = localStorage.getItem("user");
+
         vm.logOut = logOut;
 
         function logOut() {

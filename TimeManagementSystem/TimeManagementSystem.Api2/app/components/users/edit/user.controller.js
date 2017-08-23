@@ -35,7 +35,7 @@
         vm.saveMethod = null;
         vm.saveMethodName = null;
         vm.isAddingMode = true;
-        vm.oldPassword = '';
+        vm.isAdministrator = localStorage.getItem("role") === "Administrator";
         vm.passwordRepeat = '';
         vm.permissionLevels = [{ name: "regular", value: 0 }, { name: "user manager", value: 1 }, { name: "administrator", value: 2 }];
         vm.selectedPermissionLevel = vm.permissionLevels[0];
@@ -84,6 +84,7 @@
 
         function editUser(login) {
             vm.user.PermissionLevel = vm.selectedPermissionLevel.value;
+            //@todo: check if passwords are the same
             $http({
                 method: "PUT",
                 url: '/api/Users',

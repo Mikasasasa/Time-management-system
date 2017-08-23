@@ -49,10 +49,15 @@ namespace TimeManagementSystem.API {
 		}
 
 		public async Task<IdentityResult> UpdateUser(User user) {
+            //@todo: this method needs refactoring
 			var authUser = await _userManager.FindByIdAsync(user.Id);
 			authUser.UserName = user.Login;
 			authUser.PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay;
 			var result = await _userManager.UpdateAsync(authUser);
+            if(!string.IsNullOrEmpty(user.Password) && !string.IsNullOrEmpty(user.OldPassword))
+            {
+                var changePasswordResult = await _userManager.ChangePasswordAsync(user.Id, user.OldPassword, user.Password);
+            }
 			if (user.PermissionLevel != getPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
 				var result2 = await _userManager.RemoveFromRolesAsync(authUser.Id, _userManager.GetRoles(authUser.Id).ToArray());
 				var result3 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));

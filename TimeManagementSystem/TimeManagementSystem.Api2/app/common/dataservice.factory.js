@@ -28,6 +28,7 @@
             })
             .then(function (data) {
                 localStorage.setItem("token", data.data.access_token);
+                localStorage.setItem("user", login);
             })
             .catch(function (data) {
                 var errorDescription = data.data.error_description;

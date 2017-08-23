@@ -1,11 +1,11 @@
 ﻿<form ng-submit="vm.saveMethod()">
-	<div>
+	<div ng-show="isAdministrator">
 		<label for="login">Login:</label>
 		<input type="text" ng-model="vm.user.Login" id="login" /><br />
 	</div>
 	<div ng-hide="vm.isAddingMode">
 		<label for="oldPassword">Old password:</label>
-		<input type="password" ng-model="vm.oldPassword" id="oldPassword" /><br />
+		<input type="password" ng-model="vm.user.OldPassword" id="oldPassword" /><br />
 	</div>
 	<div>
 		<label for="password">Password:</label>
@@ -15,7 +15,7 @@
 		<label for="passwordRepeat">Password repeat:</label>
 		<input type="password" ng-model="vm.passwordRepeat" id="passwordRepeat" /><br />
 	</div>
-	<div>
+	<div ng-show="isAdministrator">
 		<label for="permissionLevel">PermissionLevel:</label>
 		<select id="permissionLevel" ng-options="item as item.name for item in vm.permissionLevels track by item.value" ng-model="vm.selectedPermissionLevel">
 		</select><br />

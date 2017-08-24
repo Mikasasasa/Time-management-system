@@ -68,13 +68,14 @@
                     method: "DELETE",
                     url: '/api/Users/' + user.Id
                 })
-                .then(function (data) {
-                    self.users.remove(user);
-                    toastr.success("User deleted successfully.");
-                })
-                .catch(function (data) {
-                    toastr.error("Unautorized access.");
-                });
+                    .then(function (data) {
+                        var index = vm.users.indexOf(user);
+                        vm.users.splice(index, 1);
+                        toastr.success("User deleted successfully.");
+                    })
+                    .catch(function (data) {
+                        toastr.error("Unautorized access.");
+                    });
             }
         }
     }

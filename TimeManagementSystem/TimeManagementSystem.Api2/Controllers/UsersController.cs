@@ -159,7 +159,7 @@ namespace TimeManagementSystem.API.Controllers
 
 			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 
-			if (_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+			if (_repo.getPermissionLevel(role) != PermissionLevel.Regular) {
 				await _repo.DeleteUser(id);
 			}
 			else {

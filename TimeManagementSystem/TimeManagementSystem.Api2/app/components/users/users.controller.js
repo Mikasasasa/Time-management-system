@@ -18,7 +18,7 @@
                     'content@': {
                         templateUrl: 'app/components/users/users.html',
                         controller: 'UsersController as vm'
-                    },
+                    }
                 }
             });
     }
@@ -48,7 +48,7 @@
 
         function fetchUsersSuccess(data) {
             vm.users = data.data;
-        };
+        }
 
         function fetchUsersError(data) {
             toastr.error("Unauthorized access.");

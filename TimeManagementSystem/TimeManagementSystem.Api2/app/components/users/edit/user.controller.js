@@ -14,7 +14,7 @@
                     'content@': {
                         templateUrl: 'app/components/users/edit/user.html',
                         controller: 'UserController as vm'
-                    },
+                    }
                 }
             })
             .state('app.users.edit', {
@@ -23,7 +23,7 @@
                     'content@': {
                         templateUrl: 'app/components/users/edit/user.html',
                         controller: 'UserController as vm'
-                    },
+                    }
                 }
             });
     }

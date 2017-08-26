@@ -58,7 +58,7 @@ namespace TimeManagementSystem.API {
             {
                 var changePasswordResult = await _userManager.ChangePasswordAsync(user.Id, user.OldPassword, user.Password);
             }
-			if (user.PermissionLevel != getPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
+			if (user.PermissionLevel != GetPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
 				var result2 = await _userManager.RemoveFromRolesAsync(authUser.Id, _userManager.GetRoles(authUser.Id).ToArray());
 				var result3 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
 			}
@@ -77,17 +77,11 @@ namespace TimeManagementSystem.API {
 
 		}
 
-		public PermissionLevel getPermissionLevel(string roleId) {
-			switch (roleId) {
-				case "0":
-					return PermissionLevel.Regular;
-				case "1":
-					return PermissionLevel.UserManager;
-				case "2":
-					return PermissionLevel.Administrator;
-				default:
-					return PermissionLevel.Undefined;
-			}
+		public PermissionLevel GetPermissionLevel(string roleName) {
+            if(Enum.TryParse(roleName, out PermissionLevel role)) {
+                return role;
+            }
+            return PermissionLevel.Undefined;
 		}
 	}
 }

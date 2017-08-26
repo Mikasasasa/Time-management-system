@@ -1,9 +1,9 @@
 ﻿<a ng-show="vm.isUserManager || vm.isAdministrator" ui-sref="app.users.list">
 	Users
 </a>
-<!--<a ng-show="vm.isRegular || vm.isAdministrator" ui-sref="app.time-records.list">
+<a ng-show="vm.isRegular || vm.isAdministrator" ui-sref="app.time-records.list">
 	Time records
-</a>-->
+</a>
 <a ng-show="vm.isRegular" ui-sref="app.users.edit({login: vm.user})">
 	My profile
 </a>

@@ -34,10 +34,10 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			var username = claims.FirstOrDefault(claim => claim.Type == "username").Value;
 
-			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+			if(_repo.GetPermissionLevel(role) == PermissionLevel.Regular) {
 				var user = await _repo.FindUser(username);
 				return new List<User> { new User {
 					Id = user.Id,
@@ -49,7 +49,7 @@ namespace TimeManagementSystem.API.Controllers
 				return users.Select(user => new User {
 					Id = user.Id,
 					Login = user.UserName,
-					PermissionLevel = _repo.getPermissionLevel(user.Roles.FirstOrDefault().RoleId),
+					PermissionLevel = _repo.GetPermissionLevel(user.Roles.FirstOrDefault().RoleId),
 					PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
 				}).ToList();
 			}
@@ -62,8 +62,8 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
-			if(_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
+			if(_repo.GetPermissionLevel(role) == PermissionLevel.Regular) {
 				return Unauthorized();
 			}
 
@@ -72,8 +72,9 @@ namespace TimeManagementSystem.API.Controllers
 				return NotFound();
 			}
 			var result = new User {
+				Id = user.Id,
 				Login = user.UserName,
-				PermissionLevel = _repo.getPermissionLevel(user.Roles.FirstOrDefault().RoleId),
+				PermissionLevel = _repo.GetPermissionLevel(user.Roles.FirstOrDefault().RoleId),
 				PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay
 			};
 			return Ok(result);
@@ -94,10 +95,10 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-			if (_repo.getPermissionLevel(role) != PermissionLevel.Regular) {
+			if (_repo.GetPermissionLevel(role) != PermissionLevel.Regular) {
 				await _repo.UpdateUser(user);
 			} else {
 				if (id == userId) {
@@ -156,9 +157,9 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+			var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 
-			if (_repo.getPermissionLevel(role) == PermissionLevel.Regular) {
+			if (_repo.GetPermissionLevel(role) != PermissionLevel.Regular) {
 				await _repo.DeleteUser(id);
 			}
 			else {

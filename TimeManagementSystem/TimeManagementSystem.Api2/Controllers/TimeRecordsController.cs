@@ -19,17 +19,17 @@ namespace TimeManagementSystem.API.Controllers
         private AuthContext db = new AuthContext();
 
         // GET: api/TimeRecords
-		[Authorize(Roles ="Administrator")]
 		[ResponseType(typeof(IList<TimeRecord>))]
-		public IHttpActionResult GetTimeRecors() {
-			var identity = (ClaimsIdentity)User.Identity;
-			IEnumerable<Claim> claims = identity.Claims;
+		public IHttpActionResult GetTimeRecors()
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
+            var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
 			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
-			if (getPermissionLevel(role) == PermissionLevel.Regular) {
+			if (GetPermissionLevel(role) == PermissionLevel.Regular) {
 				return Ok(db.TimeRecors.Where(tr => tr.UserId == userId).OrderBy(tr => tr.StartDate));
-			} else if (getPermissionLevel(role) == PermissionLevel.Administrator) {
+			} else if (GetPermissionLevel(role) == PermissionLevel.Administrator) {
 				return Ok(db.TimeRecors.OrderBy(tr => tr.StartDate));
 			} else {
 				return Unauthorized();
@@ -43,10 +43,10 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
-			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+            var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
+            var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-			var permissionLevel = getPermissionLevel(role);
+			var permissionLevel = GetPermissionLevel(role);
 
 			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
 				return Unauthorized();
@@ -72,10 +72,10 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
-			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+            var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
+            var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-			var permissionLevel = getPermissionLevel(role);
+			var permissionLevel = GetPermissionLevel(role);
 
 			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
 				return Unauthorized();
@@ -145,10 +145,10 @@ namespace TimeManagementSystem.API.Controllers
 			var identity = (ClaimsIdentity)User.Identity;
 			IEnumerable<Claim> claims = identity.Claims;
 
-			var role = claims.FirstOrDefault(claim => claim.Type == "role").Value;
-			var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
+            var role = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role).Value;
+            var userId = claims.FirstOrDefault(claim => claim.Type == "userId").Value;
 
-			var permissionLevel = getPermissionLevel(role);
+			var permissionLevel = GetPermissionLevel(role);
 
 			if (permissionLevel == PermissionLevel.UserManager || permissionLevel == PermissionLevel.Undefined) {
 				return Unauthorized();
@@ -185,17 +185,13 @@ namespace TimeManagementSystem.API.Controllers
             return db.TimeRecors.Count(e => e.Id == id) > 0;
 		}
 
-		private PermissionLevel getPermissionLevel(string roleId) {
-			switch (roleId) {
-				case "0":
-					return PermissionLevel.Regular;
-				case "1":
-					return PermissionLevel.UserManager;
-				case "2":
-					return PermissionLevel.Administrator;
-				default:
-					return PermissionLevel.Undefined;
-			}
-		}
-	}
+        private PermissionLevel GetPermissionLevel(string roleName)
+        {
+            if (Enum.TryParse(roleName, out PermissionLevel role))
+            {
+                return role;
+            }
+            return PermissionLevel.Undefined;
+        }
+    }
 }

@@ -49,12 +49,17 @@ namespace TimeManagementSystem.API {
 		}
 
 		public async Task<IdentityResult> UpdateUser(User user) {
+            //@todo: this method needs refactoring
 			var authUser = await _userManager.FindByIdAsync(user.Id);
 			authUser.UserName = user.Login;
 			authUser.PreferredWorkingHourPerDay = user.PreferredWorkingHourPerDay;
 			var result = await _userManager.UpdateAsync(authUser);
-			if (user.PermissionLevel != getPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
-				var result2 = await _userManager.RemoveFromRoleAsync(authUser.Id, authUser.Roles.FirstOrDefault().RoleId);
+            if(!string.IsNullOrEmpty(user.Password) && !string.IsNullOrEmpty(user.OldPassword))
+            {
+                var changePasswordResult = await _userManager.ChangePasswordAsync(user.Id, user.OldPassword, user.Password);
+            }
+			if (user.PermissionLevel != GetPermissionLevel(authUser.Roles.FirstOrDefault().RoleId) && user.PermissionLevel != PermissionLevel.Undefined) {
+				var result2 = await _userManager.RemoveFromRolesAsync(authUser.Id, _userManager.GetRoles(authUser.Id).ToArray());
 				var result3 = await _userManager.AddToRoleAsync(authUser.Id, Enum.GetName(user.PermissionLevel.GetType(), user.PermissionLevel));
 			}
 			return result;
@@ -72,17 +77,11 @@ namespace TimeManagementSystem.API {
 
 		}
 
-		public PermissionLevel getPermissionLevel(string roleId) {
-			switch (roleId) {
-				case "0":
-					return PermissionLevel.Regular;
-				case "1":
-					return PermissionLevel.UserManager;
-				case "2":
-					return PermissionLevel.Administrator;
-				default:
-					return PermissionLevel.Undefined;
-			}
+		public PermissionLevel GetPermissionLevel(string roleName) {
+            if(Enum.TryParse(roleName, out PermissionLevel role)) {
+                return role;
+            }
+            return PermissionLevel.Undefined;
 		}
 	}
 }

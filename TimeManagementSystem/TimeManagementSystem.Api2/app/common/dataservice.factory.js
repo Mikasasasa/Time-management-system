@@ -5,11 +5,10 @@
         .module('app')
         .factory('dataservice', dataservice);
 
-    dataservice.$inject = ['$http', "$location"];
-
-    function dataservice($http, $location) {
+    function dataservice($http, $q) {
         return {
-            loginIntoApp: loginIntoApp
+            loginIntoApp: loginIntoApp,
+            register: register
         };
 
         function loginIntoApp(login, password) {
@@ -28,14 +27,34 @@
                 data: { username: login, password: password, grant_type: "password" }
             })
             .then(function (data) {
-                localStorage.setItem("token", "Bearer " + data.data.access_token);
-                $location.path("/home");
+                localStorage.setItem("token", data.data.access_token);
+                localStorage.setItem("user", login);
             })
             .catch(function (data) {
                 var errorDescription = data.data.error_description;
                 toastr.error(errorDescription);
+                return $q.reject();
+            });
+        }
+
+        function register(login, password) {
+            return $http({
+                method: 'POST',
+                url: '/api/Users',
+                data: {
+                    Login: login,
+                    Password: password,
+                    PermissionLevel: 0
+                }
+            })
+            .then(function (data) {
+                toastr.success("User created");
+            })
+            .catch(function (data) {
+                var errorDescription = data.data.ModelState[""][0];
+                toastr.error(errorDescription);
+                return $q.reject();
             });
         }
     }
-
 })();

@@ -1,12 +1,16 @@
-﻿<a ng-show="vm.isUserManager || vm.isAdministrator" ui-sref="app.users.list">
-	Users
-</a>
-<a ng-show="vm.isRegular || vm.isAdministrator" ui-sref="app.time-records.list">
-	Time records
-</a>
-<a ng-show="vm.isRegular" ui-sref="app.users.edit({login: vm.user})">
-	My profile
-</a>
-<a ng-click="vm.logOut()">
-	Logout
-</a>
+﻿<ul class="nav navbar-nav">
+    <li>
+        <a ng-show="vm.isUserManager || vm.isAdministrator" ui-sref="app.users.list">Users</a>
+    </li>
+    <li>
+        <a ng-show="vm.isRegular || vm.isAdministrator" ui-sref="app.time-records.list">Time records</a>
+    </li>
+    <li>
+        <a ng-show="vm.isRegular" ui-sref="app.users.edit({login: vm.user})">My profile</a>
+    </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a ng-click="vm.logOut()">Log out</a>
+    </li>
+</ul>

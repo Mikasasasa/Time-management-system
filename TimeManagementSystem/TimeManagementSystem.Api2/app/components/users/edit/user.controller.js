@@ -54,7 +54,7 @@
                     vm.user = data.data;
                     setPermissionLevel(vm.user.PermissionLevel);
                     vm.saveMethod = editUser;
-                    vm.saveMethodName = "save";
+                    vm.saveMethodName = "Edit";
                     vm.isAddingMode = false;
                 });
             } else {
@@ -65,7 +65,7 @@
                     PreferredWorkingHourPerDay: null
                 };
                 vm.saveMethod = addUser;
-                vm.saveMethodName = "add";
+                vm.saveMethodName = "Add";
             }
         }
 

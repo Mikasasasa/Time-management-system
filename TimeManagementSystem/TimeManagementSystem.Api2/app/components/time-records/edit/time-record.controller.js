@@ -52,7 +52,7 @@
                         vm.record.StartDate = new Date(data.data.StartDate);
                         vm.saveMethod = editRecord;
                         vm.isAddingMode = false;
-                        vm.saveMethodName = "save";
+                        vm.saveMethodName = "Edit";
                     });
             } else {
                 vm.record = {
@@ -61,7 +61,7 @@
                     Length: 0
                 };
                 vm.saveMethod = addRecord;
-                vm.saveMethodName = "add";
+                vm.saveMethodName = "Add";
             }
         }
 

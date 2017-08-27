@@ -1,8 +1,17 @@
-﻿<div>
-	<form ng-submit="vm.register()">
-		<input type="text" ng-model="vm.login" placeholder="Login" />
-		<input type="password" ng-model="vm.password" placeholder="Password" />
-		<input type="password" ng-model="vm.confirmPassword" placeholder="Confirm Password" />
-		<input type="submit" value="Register" />
-	</form>
-</div>
+﻿<form class="form-signin" ng-submit="vm.register()">
+    <h2 class="form-signin-heading">Registration</h2>
+    <div class="row">
+        <div class="form-input col-xs-12">
+            <input type="text" ng-model="vm.login" placeholder="Login" />
+        </div>
+        <div class="form-input col-xs-12">
+            <input type="password" ng-model="vm.password" placeholder="Password" />
+        </div>
+        <div class="form-input col-xs-12">
+            <input type="password" ng-model="vm.confirmPassword" placeholder="Confirm Password" />
+        </div>
+        <div class="form-input col-xs-12">
+            <input type="submit" class="btn btn-lg btn-primary" value="Register" />
+        </div>
+    </div>
+</form>

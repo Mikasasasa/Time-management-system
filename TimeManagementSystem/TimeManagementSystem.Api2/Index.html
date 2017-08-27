@@ -11,18 +11,38 @@
 		}
 	</style>
 	<link rel="stylesheet" href="content/toastr.min.css" />
+    <link rel="stylesheet" href="content/bootstrap.css" />
+    <link rel="stylesheet" href="content/bootstrap-theme.css" />
+    <link rel="stylesheet" href="content/site.css" />
 </head>
 <body>
-	<h1>Angulor</h1>
 	<div ng-app="app">
-		<header ui-view="header"></header>
-		<main role="main" ui-view="content"></main>
+		<header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Time Management System</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbar-collapse" ui-view="header">
+                    </div>
+                </div>
+            </nav>
+        </header>
+		<main role="main" ui-view="content" class="container"></main>
 		<footer ui-view="footer"></footer>
 	</div>
 	<script src="Scripts/jquery-3.1.1.js"></script>
 	<script src="Scripts/toastr.min.js"></script>
 	<script src="Scripts/angular.min.js"></script>
 	<script src="Scripts/angular-ui-router.min.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+
 	<script src="app/app.module.js"></script>
 	<script src="app/common/authInterceptor.factory.js"></script>
 	<script src="app/common/dataservice.factory.js"></script>

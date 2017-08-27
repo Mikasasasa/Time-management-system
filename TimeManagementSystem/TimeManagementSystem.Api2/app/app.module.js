@@ -31,7 +31,7 @@
                     },
                     content: {},
                     footer: {
-                        template: 'footer'
+                        template: ''
                     }
                 }
             })
@@ -40,7 +40,7 @@
                 views: {
                     'content@': {
                         templateUrl: 'app/components/home/home.html'
-                    },
+                    }
                 }
             });
 

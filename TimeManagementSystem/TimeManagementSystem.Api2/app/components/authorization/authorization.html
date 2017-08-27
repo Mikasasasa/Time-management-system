@@ -1,7 +1,14 @@
-﻿<div>
-	<form ng-submit="vm.logIntoApp()">
-		<input type="text" ng-model="vm.login" placeholder="Login" />
-		<input type="password" ng-model="vm.password" placeholder="Password" />
-		<input type="submit" value="login" />
-	</form>
-</div>
+﻿<form class="form-signin" ng-submit="vm.logIntoApp()">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <div class="row">
+        <div class="form-input col-xs-12">
+            <input type="text" ng-model="vm.login" placeholder="Login" />
+        </div>
+        <div class="form-input col-xs-12">
+            <input type="password" ng-model="vm.password" placeholder="Password" />
+        </div>
+        <div class="form-input col-xs-12">
+            <input type="submit" class="btn btn-lg btn-primary" value="Sign in" />
+        </div>
+    </div>
+</form>

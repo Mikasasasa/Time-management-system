@@ -49,7 +49,7 @@
                 })
                     .then(function (data) {
                         vm.record = data.data;
-                        vm.record.StartDate = new Date(data.data.StartDate)
+                        vm.record.StartDate = new Date(data.data.StartDate);
                         vm.saveMethod = editRecord;
                         vm.isAddingMode = false;
                         vm.saveMethodName = "save";

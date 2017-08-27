@@ -13,19 +13,6 @@
 	<link rel="stylesheet" href="content/toastr.min.css" />
 </head>
 <body>
-	<div id="header">
-		<div id="menu">
-			<!-- ko if: isMenuVisible-->
-			<!--<a data-bind="visible: canSeeTimeRecords" href="/#timeRecords">Time Records</a>
-			<a data-bind="visible: canSeeUsers" href="/#users">Users</a>
-			<a data-bind="visible: canSeeMyProfile" href="/#users/edit">My Profile</a>
-			<a data-bind="click: logout">Logout</a>
-			<hr />-->
-			<!-- /ko-->
-		</div>
-	</div>
-	<div id="wrapper"></div>
-
 	<h1>Angulor</h1>
 	<div ng-app="app">
 		<header ui-view="header"></header>
@@ -33,7 +20,6 @@
 		<footer ui-view="footer"></footer>
 	</div>
 	<script src="Scripts/jquery-3.1.1.js"></script>
-
 	<script src="Scripts/toastr.min.js"></script>
 	<script src="Scripts/angular.min.js"></script>
 	<script src="Scripts/angular-ui-router.min.js"></script>
@@ -47,11 +33,5 @@
 	<script src="app/components/users/edit/user.controller.js"></script>
     <script src="app/components/time-records/time-records.controller.js"></script>
     <script src="app/components/time-records/edit/time-record.controller.js"></script>
-
-	<!--<script src="app.js"></script>
-	<script src="Scripts/components/auth.js"></script>
-	<script src="Scripts/components/users.js"></script>
-	<script src="Scripts/components/home.js"></script>
-	<script src="Scripts/components/timeRecord.js"></script>-->
 </body>
 </html>

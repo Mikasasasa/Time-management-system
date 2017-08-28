@@ -165,6 +165,9 @@
     <Content Include="content\toastr.css" />
     <Content Include="content\toastr.min.css" />
     <Content Include="content\ui-bootstrap-csp.css" />
+    <Content Include="content\ui-grid.css" />
+    <Content Include="content\ui-grid.min.css" />
+    <Content Include="content\ui-grid.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Index.html" />
     <Content Include="Scripts\angular-route.js" />
@@ -193,6 +196,9 @@
     <Content Include="content\bootstrap.css.map" />
     <Content Include="content\bootstrap-theme.min.css.map" />
     <Content Include="content\bootstrap-theme.css.map" />
+    <Content Include="content\ui-grid.woff" />
+    <Content Include="content\ui-grid.ttf" />
+    <Content Include="content\ui-grid.eot" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -941,6 +947,8 @@
     <Content Include="Scripts\sammy.template.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\ui-grid.js" />
+    <Content Include="Scripts\ui-grid.min.js" />
     <Content Include="Views\auth.html" />
     <Content Include="Views\menu.html" />
     <Content Include="Views\timeRecord.html" />

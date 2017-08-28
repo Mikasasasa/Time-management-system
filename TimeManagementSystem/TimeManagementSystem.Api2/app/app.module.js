@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    angular.module('app', ['ui.router']);
+    angular.module('app', ['ui.router', 'ui.grid']);
 
     angular.module('app')
         .config(stateProviderConfig);
@@ -18,7 +18,7 @@
                     },
                     content: {},
                     footer: {
-                        template: 'footer'
+                        template: ''
                     }
                 }
             })

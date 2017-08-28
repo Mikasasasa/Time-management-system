@@ -38,7 +38,7 @@
                 { name: 'Actions', cellTemplate: '<div class="ui-grid-cell-contents" ><button class="btn btn-xs btn-success" ng-click="grid.appScope.editUser(row.entity.Login)">Edit</button><button class="btn btn-xs btn-danger" ng-click="grid.appScope.removeUser(row.entity)">Remove</button></div>' }
             ],
             appScopeProvider: vm
-        }
+        };
 
         fetchUsers();
 

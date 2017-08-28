@@ -30,6 +30,15 @@
         vm.addUser = addUser;
         vm.editUser = editUser;
         vm.removeUser = removeUser;
+        vm.gridOptions = {
+            columnDefs: [
+                { field: 'Login', displayName: 'Login' },
+                { field: 'PermissionLevel', displayName: 'Permission level' },
+                { field: 'PreferredWorkingHourPerDay', displayName: 'Preferred working hour per day' },
+                { name: 'Actions', cellTemplate: '<div class="ui-grid-cell-contents" ><button class="btn btn-xs btn-success" ng-click="grid.appScope.editUser(row.entity.Login)">Edit</button><button class="btn btn-xs btn-danger" ng-click="grid.appScope.removeUser(row.entity)">Remove</button></div>' }
+            ],
+            appScopeProvider: vm
+        };
 
         fetchUsers();
 
@@ -48,6 +57,7 @@
 
         function fetchUsersSuccess(data) {
             vm.users = data.data;
+            vm.gridOptions.data = vm.users;
         }
 
         function fetchUsersError(data) {

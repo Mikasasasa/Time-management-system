@@ -1,23 +1,28 @@
-﻿<button ng-click="vm.addRecord()">Add record</button>
-<h2>Records:</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Note</th>
-            <th>Date</th>
-            <th>Length</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody ng-repeat="item in vm.records">
-        <tr>
-            <td>{{ item.Note }}</td>
-            <td>{{ moment(item.StartDate).format('L') }}</td>
-            <td>{{ item.Length }}</td>
-            <td>
-                <button ng-click="vm.editRecord(item.Id)">Edit</button>
-                <button ng-click="vm.removeRecord(item)">Remove</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+﻿<div>
+    <div class="btn-toolbar pull-right">
+        <button class="btn btn-sm btn-primary" ng-click="vm.addRecord()">Add record</button>
+    </div>
+    <h2>Time records</h2>
+    <div ui-grid="vm.gridOptions"></div>
+    <!--<table>
+        <thead>
+            <tr>
+                <th>Note</th>
+                <th>Date</th>
+                <th>Length</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="item in vm.records">
+            <tr>
+                <td>{{ item.Note }}</td>
+                <td>{{ moment(item.StartDate).format('L') }}</td>
+                <td>{{ item.Length }}</td>
+                <td>
+                    <button ng-click="vm.editRecord(item.Id)">Edit</button>
+                    <button ng-click="vm.removeRecord(item)">Remove</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>-->
+</div>

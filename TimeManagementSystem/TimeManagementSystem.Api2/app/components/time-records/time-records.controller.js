@@ -30,6 +30,15 @@
         vm.addRecord = addRecord;
         vm.editRecord = editRecord;
         vm.removeRecord = removeRecord;
+        vm.gridOptions = {
+            columnDefs: [
+                { field: 'Note', displayName: 'Note' },
+                { field: 'StartDate', displayName: 'Start date', cellFilter: 'date:\'yyyy-MM-dd\'' },
+                { field: 'Length', displayName: 'Length (h)' },
+                { name: 'Actions', cellTemplate: '<div class="ui-grid-cell-contents" ><button class="btn btn-xs btn-success" ng-click="grid.appScope.editRecord(row.entity.Id)">Edit</button><button class="btn btn-xs btn-danger" ng-click="grid.appScope.removeRecord(row.entity)">Remove</button></div>' }
+            ],
+            appScopeProvider: vm
+        };
 
         fetchRecord();
 
@@ -48,6 +57,7 @@
 
         function fetchRecordSuccess(data) {
             vm.records = data.data;
+            vm.gridOptions.data = vm.records;
         }
 
         function fetchRecordError(data) {

@@ -1,15 +1,18 @@
-﻿<form ng-submit="vm.saveMethod()">
-    <div>
+﻿<form class="form-records" ng-submit="vm.saveMethod()">
+    <h2 class="form-records-heading">{{vm.saveMethodName}} record</h2>
+    <div class="form-input col-xs-12">
         <label for="note">Note:</label>
         <input type="text" ng-model="vm.record.Note" id="note" /><br />
     </div>
-    <div>
+    <div class="form-input col-xs-12">
         <label for="startDate">Date:</label>
         <input type="date" ng-model="vm.record.StartDate" id="startDate" /><br />
     </div>
-    <div>
+    <div class="form-input col-xs-12">
         <label for="length">Length(h):</label>
         <input type="number" ng-model="vm.record.Length" id="length" /><br />
     </div>
-    <input type="submit" value="{{vm.saveMethodName}}" />
+    <div class="form-input pull-right">
+        <input type="submit" class="btn btn-lg btn-primary" value="{{vm.saveMethodName}}" />
+    </div>
 </form>

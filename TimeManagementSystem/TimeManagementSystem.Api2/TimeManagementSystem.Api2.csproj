@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.2.3.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -137,26 +138,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.js" />
-    <Content Include="app\app.module.js" />
-    <Content Include="app\common\authInterceptor.factory.js" />
-    <Content Include="app\components\anonymous-header\header.html" />
-    <Content Include="app\components\app-header\header.controller.js" />
-    <Content Include="app\components\app-header\header.html" />
-    <Content Include="app\components\authorization\authorization.controller.js" />
-    <Content Include="app\components\authorization\authorization.html" />
-    <Content Include="app\components\registration\registration.controller.js" />
-    <Content Include="app\components\registration\registration.html" />
-    <Content Include="app\components\time-records\edit\time-record.controller.js" />
-    <Content Include="app\components\time-records\edit\time-record.html" />
-    <Content Include="app\components\time-records\time-records.controller.js" />
-    <Content Include="app\components\time-records\time-records.html" />
-    <Content Include="app\components\users\edit\user.controller.js" />
-    <Content Include="app\components\users\edit\user.html" />
-    <Content Include="app\components\users\users.controller.js" />
-    <Content Include="app\components\users\users.html" />
-    <Content Include="app\common\dataservice.factory.js" />
-    <Content Include="app\components\home\home.html" />
+    <Content Include="app\app.component.html" />
+    <Content Include="app\components\users\edit\user.component.html" />
+    <Content Include="app\components\users\users.component.html" />
+    <Content Include="app_old\app.module.js" />
+    <Content Include="app_old\common\authInterceptor.factory.js" />
+    <Content Include="app_old\components\anonymous-header\header.html" />
+    <Content Include="app_old\components\app-header\header.controller.js" />
+    <Content Include="app_old\components\app-header\header.html" />
+    <Content Include="app_old\components\authorization\authorization.controller.js" />
+    <Content Include="app_old\components\authorization\authorization.html" />
+    <Content Include="app_old\components\registration\registration.controller.js" />
+    <Content Include="app_old\components\registration\registration.html" />
+    <Content Include="app_old\components\time-records\edit\time-record.controller.js" />
+    <Content Include="app_old\components\time-records\edit\time-record.html" />
+    <Content Include="app_old\components\time-records\time-records.controller.js" />
+    <Content Include="app_old\components\time-records\time-records.html" />
+    <Content Include="app_old\components\users\edit\user.controller.js" />
+    <Content Include="app_old\components\users\edit\user.html" />
+    <Content Include="app_old\components\users\users.controller.js" />
+    <Content Include="app_old\components\users\users.html" />
+    <Content Include="app_old\common\dataservice.factory.js" />
+    <Content Include="app_old\components\home\home.html" />
     <Content Include="content\bootstrap-theme.css" />
     <Content Include="content\bootstrap-theme.min.css" />
     <Content Include="content\bootstrap.css" />
@@ -199,6 +202,8 @@
     <Content Include="content\ui-grid.woff" />
     <Content Include="content\ui-grid.ttf" />
     <Content Include="content\ui-grid.eot" />
+    <Content Include="package.json" />
+    <Content Include="app\components\login\login.component.html" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -949,6 +954,8 @@
     <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\ui-grid.js" />
     <Content Include="Scripts\ui-grid.min.js" />
+    <Content Include="systemjs-angular-loader.js" />
+    <Content Include="systemjs.config.js" />
     <Content Include="Views\auth.html" />
     <Content Include="Views\menu.html" />
     <Content Include="Views\timeRecord.html" />
@@ -988,6 +995,7 @@
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -999,11 +1007,28 @@
     <Folder Include="App_Data\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app\app.component.ts" />
+    <TypeScriptCompile Include="app\app.module.ts" />
+    <TypeScriptCompile Include="app\app.routing.ts" />
+    <TypeScriptCompile Include="app\components\login\login.component.ts" />
+    <TypeScriptCompile Include="app\components\users\edit\user.component.ts" />
+    <TypeScriptCompile Include="app\components\users\users.component.ts" />
+    <TypeScriptCompile Include="app\models\user.ts" />
+    <TypeScriptCompile Include="app\services\data.service.ts" />
+    <TypeScriptCompile Include="app\shared\enum.ts" />
+    <TypeScriptCompile Include="app\shared\global.ts" />
+    <TypeScriptCompile Include="main.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>

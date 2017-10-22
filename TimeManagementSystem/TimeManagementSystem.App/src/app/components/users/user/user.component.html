@@ -1,0 +1,49 @@
+﻿<form class="form-user" (submit)="userForm.valid && saveMethod(userForm)" [formGroup]="userForm" novalidate>
+  <h2 class="form-user-heading">{{saveMethodName}} user</h2>
+  <div class="row">
+    <div *ngIf="isAdministrator" class="form-input col-xs-12">
+      <label for="login">Login:</label>
+      <input type="text" formControlName="Login" id="login" /><br />
+      <div class='form-text error' *ngIf="userForm.controls.Login.touched">
+        <div *ngIf="userForm.controls.Login.hasError('required')">Login is required.</div>
+      </div> 
+    </div>
+    <div *ngIf="isEditingMode" class="form-input col-xs-12">
+      <label for="oldPassword">Old password:</label>
+      <input type="password" formControlName="OldPassword" id="oldPassword" /><br />
+      <div class='form-text error'>
+        <div *ngIf="userForm.hasError('oldPasswordValidator')">Old password is required when you want to change your password.</div>
+      </div> 
+    </div>
+    <div class="form-input col-xs-12">
+      <label for="password">Password:</label>
+      <input type="password" formControlName="Password" id="password" /><br />
+      <div class='form-text error' *ngIf="userForm.controls.Password.touched">
+        <div *ngIf="userForm.controls.Password.hasError('required')">Password is required.</div>
+      </div> 
+    </div>
+    <div class="form-input col-xs-12">
+      <label for="passwordRepeat">Password repeat:</label>
+      <input type="password" formControlName="PasswordRepeat" id="passwordRepeat" /><br />
+      <div class='form-text error' *ngIf="userForm.controls.PasswordRepeat.touched">
+        <div *ngIf="userForm.hasError('passwordsValidator')">Passwords do not match.</div>
+      </div> 
+    </div>
+    <div *ngIf="isAdministrator" class="form-input col-xs-12">
+      <label for="permissionLevel">PermissionLevel:</label>
+      <select id="permissionLevel" formControlName="PermissionLevel">
+        <option *ngFor="let key of permissionLevelKeys" [value]="key" [label]="permissionLevels[key]"></option>
+      </select>
+    </div>
+    <div class="form-input col-xs-12">
+      <label for="preferredWorkingHourPerDay">PreferredWorkingHourPerDay:</label>
+      <input type="text" formControlName="PreferredWorkingHourPerDay" id="preferredWorkingHourPerDay" /><br />
+    </div>
+    <div class="form-input pull-right">
+      <input type="submit" class="btn btn-lg btn-primary" value="{{saveMethodName}}" [disabled]="!userForm.valid" />
+    </div>
+  </div>
+</form>
+
+
+

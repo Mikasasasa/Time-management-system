@@ -127,8 +127,8 @@ namespace TimeManagementSystem.API.Controllers
 			if (errorResult != null) {
 				return errorResult;
 			}
-
-			return Ok();
+            
+            return Created(user.Login, user);
 		}
 
 		private IHttpActionResult GetErrorResult(IdentityResult result) {
@@ -166,7 +166,7 @@ namespace TimeManagementSystem.API.Controllers
 				return Unauthorized();
 			}
 
-			return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)

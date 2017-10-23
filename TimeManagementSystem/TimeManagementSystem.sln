@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeManagementSystem.Api2", "TimeManagementSystem.Api2\TimeManagementSystem.Api2.csproj", "{59B4E5F3-13B6-48AD-8BA7-4E858181C62C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeManagementSystem.App", "TimeManagementSystem.App\TimeManagementSystem.App.csproj", "{69D1458E-9D2F-42E6-BCF0-418319C5682E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{59B4E5F3-13B6-48AD-8BA7-4E858181C62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59B4E5F3-13B6-48AD-8BA7-4E858181C62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59B4E5F3-13B6-48AD-8BA7-4E858181C62C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69D1458E-9D2F-42E6-BCF0-418319C5682E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69D1458E-9D2F-42E6-BCF0-418319C5682E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69D1458E-9D2F-42E6-BCF0-418319C5682E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69D1458E-9D2F-42E6-BCF0-418319C5682E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
